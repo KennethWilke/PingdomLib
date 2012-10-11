@@ -7,11 +7,6 @@ server_address = 'https://api.pingdom.com'
 api_version = '2.0'
 
 
-class PingdomLibError(Exception):
-    """Exception wrapper"""
-    pass
-
-
 class Pingdom(object):
     """Main connection object to interact with pingdom"""
 
@@ -20,9 +15,13 @@ class Pingdom(object):
         self.password = password
         self.apikey = apikey
         self.url = '%s/api/%s/' % (server, api_version)
+        self.shortlimit = ''
+        self.longlimit = ''
 
     def request(self, method, url, parameters=None):
-        """Generic request method"""
+        """Requests wrapper function"""
+
+        # Method selection handling
         if method.upper() == 'GET':
             response = requests.get(self.url + url, params=parameters,
                                     auth=(self.username, self.password),
@@ -32,15 +31,21 @@ class Pingdom(object):
                                      auth=(self.username, self.password),
                                      headers={'App-Key': self.apikey})
         else:
-            raise PingdomLibError("Invalid method")
+            raise Exception("Invalid method in pingdom request")
 
+        # Verify OK response
         if response.status_code != 200:
             response.raise_for_status()
+
+        # Store pingdom api limits
+        self.shortlimit = response.headers['Req-Limit-Short']
+        self.longlimit = response.headers['Req-Limit-Long']
 
         return response
 
     def actions(self, **parameters):
-        """Returns a list of actions generated for your account.
+        """Returns a list of actions (alerts) that have been generated for
+            your account.
 
         Optional Parameters:
 
@@ -94,6 +99,7 @@ class Pingdom(object):
                     Default: None
         """
 
+        # Warn user about unhandled parameters
         for key in parameters:
             if key not in ['from', 'to', 'limit', 'offset', 'checkids',
                            'contactids', 'status', 'via']:
@@ -121,6 +127,7 @@ class Pingdom(object):
                     Default: 0
         """
 
+        # Warn user about unhandled parameters
         for key in parameters:
             if key not in ['limit', 'offset']:
                 sys.stderr.write('%s not a valid argument for getChecks()\n'
@@ -128,4 +135,36 @@ class Pingdom(object):
 
         response = self.request('GET', 'checks', parameters)
 
-        return response.json['checks']
+        return [PingdomCheck(self, x) for x in response.json['checks']]
+
+    def getCheck(self, checkid):
+        """Returns a detailed description of a specified check."""
+
+        response = self.request('GET', 'checks/%s' % checkid)
+
+        return PingdomCheck(self, response.json['check'])
+
+
+class PingdomCheck(object):
+    """Class representing a check in pingdom"""
+
+    def __init__(self, instantiator, checkinfo=dict()):
+        self.pingdom = instantiator
+        # Auto-load instance attributes from passed in dictionary
+        for key in checkinfo:
+            if key == 'type':
+                # Take key from type dict, convert to string for type attribute
+                self.type = checkinfo[key].iterkeys().next()
+                # Take value from type dict, store to member of new attribute
+                setattr(self, self.type, checkinfo[key].itervalues().next())
+            else:
+                # Store other key value pairs as attributes
+                setattr(self, key, checkinfo[key])
+
+    def analysis(self, **parameters):
+        """Returns a list of the latest root cause analysis results for a
+            specified check."""
+        response = self.pingdom.request('GET', 'analysis/%s' % self.id,
+                                        parameters)
+
+        return response.json['analysis']

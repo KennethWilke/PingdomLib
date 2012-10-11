@@ -9,10 +9,11 @@ python.
 TODO
 ====
 
-Integrate remaining API calls, including full documentation:
+API Calls
+---------
 
-* Analysis
-* Checks (only does basic check pulling)
+* Analysis (incomplete, but usable)
+* Checks (incomplete, but usable)
 * Contacts
 * Credits
 * Probes
@@ -29,3 +30,8 @@ Integrate remaining API calls, including full documentation:
 * Summary.probes
 * Single
 * Traceroute
+
+Other features
+--------------
+* Gzip Compression, enabled by default
+
