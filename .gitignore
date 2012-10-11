@@ -1,0 +1,10 @@
+# ignore compile python scripts
+*.py[co]
+
+# ignore virtualenv directories
+bin
+build
+dist
+include
+lib
+lib64
