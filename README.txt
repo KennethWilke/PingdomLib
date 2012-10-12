@@ -2,6 +2,9 @@
 PingdomLib
 ==========
 
+v0.1.1
+------
+
 This library exposes the functionality of the pingdom API for usage within
 python. 
 
@@ -12,8 +15,7 @@ TODO
 API Calls
 ---------
 
-* Analysis (incomplete, but usable)
-* Checks (incomplete, but usable)
+* Checks (incomplete documentation, can check and add but not yet delete)
 * Contacts
 * Credits
 * Probes
@@ -34,4 +36,3 @@ API Calls
 Other features
 --------------
 * Gzip Compression, enabled by default
-
