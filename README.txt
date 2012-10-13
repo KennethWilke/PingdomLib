@@ -2,7 +2,7 @@
 PingdomLib
 ==========
 
-v0.1.1
+v0.1.2
 ------
 
 This library exposes the functionality of the pingdom API for usage within
