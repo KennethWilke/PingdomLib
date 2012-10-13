@@ -6,6 +6,7 @@ from pingdomlib.check import PingdomCheck
 server_address = 'https://api.pingdom.com'
 api_version = '2.0'
 
+
 class Pingdom(object):
     """Main connection object to interact with pingdom"""
 
@@ -29,6 +30,14 @@ class Pingdom(object):
             response = requests.post(self.url + url, params=parameters,
                                      auth=(self.username, self.password),
                                      headers={'App-Key': self.apikey})
+        elif method.upper() == 'PUT':
+            response = requests.put(self.url + url, params=parameters,
+                                    auth=(self.username, self.password),
+                                    headers={'App-Key': self.apikey})
+        elif method.upper() == 'DELETE':
+            response = requests.delete(self.url + url, params=parameters,
+                                       auth=(self.username, self.password),
+                                       headers={'App-Key': self.apikey})
         else:
             raise Exception("Invalid method in pingdom request")
 
@@ -101,6 +110,9 @@ class Pingdom(object):
 
         return response.json['actions']
 
+    def alerts(self, **parameters):
+        return self.actions(**parameters)['alerts']
+
     def getChecks(self, **parameters):
         """Pulls all checks from pingdom
 
@@ -136,6 +148,9 @@ class Pingdom(object):
     def newCheck(self, name, host, checktype='http', **kwargs):
         """Creates a new check with settings specified by provided parameters.
 
+        Provide new check name, hostname and type along with any additional
+            optional parameters passed as keywords
+
         Types available:
 
             * http
@@ -166,6 +181,10 @@ class Pingdom(object):
                     Default: False
 
             * sendtosms -- Send alerts as SMS
+                    Type: Boolean
+                    Default: False
+
+            * sendtotwitter -- Send alerts through Twitter
                     Type: Boolean
                     Default: False
 
@@ -226,6 +245,7 @@ class Pingdom(object):
                 would send it to the web server
                     Type: String
                     Default: None
+
             * requestheader<NAME> -- Custom HTTP header, replace <NAME> with
                 desired header name. Header in form: Header:Value
                     Type: String
@@ -256,6 +276,89 @@ class Pingdom(object):
                     Default: None
 
         TCP check options:
+
+            * port -- Target server port
+                    Type: Integer
+                    Mandatory
+
+            * stringtosend -- String to send
+                    Type: String
+                    Default: None
+
+            * stringtoexpect -- String to expect in response
+                    Type: String
+                    Default: None
+
+        DNS check options:
+
+            * expectedip -- Expected IP
+                    Type: String
+                    Mandatory
+
+            * nameserver -- Nameserver to check
+                    Type: String
+                    Mandatory
+
+        UDP check options:
+
+            * port -- Target server port
+                    Type: Integer
+                    Mandatory
+
+            * stringtosend -- String to send
+                    Type: String
+                    Default: None
+
+            * stringtoexpect -- String to expect in response
+                    Type: String
+                    Default: None
+
+        SMTP check options:
+
+            * port -- Target server port
+                    Type: Integer
+                    Default: 25
+
+            * auth -- Username and password for target SMTP authentication.
+                Example: user:password
+                    Type: String
+                    Default: None
+
+            * stringtoexpect -- String to expect in response
+                    Type: String
+                    Default: None
+
+            * encryption -- Use connection encryption
+                    Type: Boolean
+                    Default: False
+
+        POP3 check options:
+
+            * port -- Target server port
+                    Type: Integer
+                    Default: 110
+
+            * stringtoexpect -- String to expect in response
+                    Type: String
+                    Default: None
+
+            * encryption -- Use connection encryption
+                    Type: Boolean
+                    Default: False
+
+        IMAP check options:
+
+            * port -- Target server port
+                    Type: Integer
+                    Default: 143
+
+            * stringtoexpect -- String to expect in response
+                    Type: String
+                    Default: None
+
+            * encryption -- Use connection encryption
+                    Type: Boolean
+                    Default: False
         """
 
         if checktype == 'http':
@@ -385,3 +488,36 @@ class Pingdom(object):
 
         checkinfo = self.request("POST", 'checks', parameters)
         return self.getCheck(checkinfo.json['check']['id'])
+
+    def modifyChecks(self, **kwargs):
+        """Pause or change resolution for multiple checks in one bulk call.
+
+        Parameters:
+
+            * paused -- Check should be paused
+                    Type: Boolean
+
+            * resolution -- Check resolution time (in minutes)
+                    Type: Integer [1, 5, 15, 30, 60]
+
+            * checkids -- Comma-separated list of identifiers for checks to be
+                modified. Invalid check identifiers will be ignored.
+                    Type: String
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['paused', 'resolution', 'checkids']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
+                                 'of newCheck()\n')
+
+        return self.request("PUT", "checks", kwargs).json['message']
+
+    def deleteChecks(self, checkids):
+        """Deletes a list of checks, CANNOT BE REVERSED!
+
+        Provide a comma-separated list of checkid's to delete
+        """
+
+        return self.request("DELETE", "checks",
+                            {'delcheckids': checkids}).json['message']

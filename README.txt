@@ -15,7 +15,7 @@ TODO
 API Calls
 ---------
 
-* Checks (incomplete documentation, can check and add but not yet delete)
+* Checks (can add, check and modify but not yet delete)
 * Contacts
 * Credits
 * Probes

@@ -13,7 +13,7 @@ class PingdomAnalysis(object):
                                         (self.checkid, self.id))
         self.details = response.text
         return self.details
-    
+
     def __getattr__(self, attr):
         if attr == 'details':
             return self.getDetails()
