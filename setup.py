@@ -11,7 +11,7 @@ setup(
     classifiers=['Development Status :: 3 - Alpha',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Programming Language :: Python :: 2',
-        'Topic :: System :: Networking :: Monitoring']
+        'Topic :: System :: Networking :: Monitoring'],
     description='A python library to consume the pingdom API',
     long_description=open('README.txt').read(),
     install_requires=[
