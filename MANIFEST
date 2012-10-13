@@ -4,3 +4,6 @@ LICENSE.txt
 README.txt
 setup.py
 pingdomlib/__init__.py
+pingdomlib/analysis.py
+pingdomlib/check.py
+pingdomlib/pingdom.py
