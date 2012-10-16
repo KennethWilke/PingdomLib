@@ -7,7 +7,32 @@ checktypes = ['http', 'httpcustom', 'tcp', 'ping', 'dns', 'udp', 'smtp',
 
 
 class PingdomCheck(object):
-    """Class representing a check in pingdom"""
+    """Class representing a check in pingdom
+
+    Attributes:
+
+        * id -- Check identifier
+        * name -- Check name
+        * type -- Check type
+        * lasterrortime -- Timestamp of last error (if any). Format is UNIX
+                            timestamp
+        * lasttesttime -- Timestamp of last test (if any). Format is UNIX
+                           timestamp
+        * lastresponsetime -- Response time (in milliseconds) of last test
+        * status -- Current status of check
+        * resolution -- How often should the check be tested. In minutes
+        * hostname -- Target host
+        * created -- Creation time. Format is UNIX timestamp
+        * contactids -- Identifiers s of contact who should receive alerts
+        * sendtoemail -- Send alerts as email
+        * sendtosms -- Send alerts as SMS
+        * sendtotwitter -- Send alerts through Twitter
+        * sendtoiphone -- Send alerts to iPhone
+        * sendtoandroid -- Send alerts to Android
+        * sendnotificationwhendown -- Send notification when down this many
+                                       times
+        * notifyagainevery -- Notify again every n result
+        * notifywhenbackup -- Notify when back up again"""
 
     def __init__(self, instantiator, checkinfo=dict()):
         self.pingdom = instantiator
@@ -36,7 +61,10 @@ class PingdomCheck(object):
                    'port', 'auth', 'shouldcontain', 'shouldnotcontain',
                    'postdata', 'additionalurls', 'stringtosend',
                    'stringtoexpect', 'expectedip', 'nameserver']:
-            self.modify(**{key: value})
+            if self.pingdom.pushChanges:
+                self.modify(**{key: value})
+            else:
+                object.__setattr__(self, key, value)
         object.__setattr__(self, key, value)
 
     def getAnalyses(self, **parameters):
@@ -63,6 +91,19 @@ class PingdomCheck(object):
                 equal to this value. Format is UNIX timestamp.
                     Type: Integer
                     Default: Current Time
+
+        Returned structure:
+        [
+            {
+                'id' : <Integer> Analysis id
+                'timefirsttest'   : <Integer> Time of test that initiated the
+                                             confirmation test
+                'timeconfrimtest' : <Integer> Time of the confirmation test
+                                               that perfromed the error
+                                               analysis
+            },
+            ...
+        ]
         """
 
         # Warn user about unhandled parameters

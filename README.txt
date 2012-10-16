@@ -2,7 +2,7 @@
 PingdomLib
 ==========
 
-v0.1.2
+v0.1.3
 ------
 
 This library exposes the functionality of the pingdom API for usage within
@@ -12,25 +12,20 @@ python.
 TODO
 ====
 
-API Calls
----------
+API Calls not yet implemented
+-----------------------------
 
 * Contacts
-* Credits
-* Probes
-* Reference
 * Reports.email
 * Reports.public
 * Reports.shared
 * Results
-* Servertime
 * Settings
 * Summary.average
 * Summary.outage
 * Summary.perforamnce
 * Summary.probes
 * Single
-* Traceroute
 
 Other features
 --------------

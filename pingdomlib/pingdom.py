@@ -10,7 +10,9 @@ api_version = '2.0'
 class Pingdom(object):
     """Main connection object to interact with pingdom"""
 
-    def __init__(self, username, password, apikey, server=server_address):
+    def __init__(self, username, password, apikey, pushchanges=True,
+                 server=server_address):
+        self.pushChanges = pushchanges
         self.username = username
         self.password = password
         self.apikey = apikey
@@ -97,6 +99,33 @@ class Pingdom(object):
                     Type: String ['email', 'sms', 'twitter', 'iphone',
                         'android']
                     Default: All
+
+        Returned structure:
+        {
+            'alerts' : [
+                {
+                    'contactname' : <String> Name of alerted contact
+                    'contactid'   : <String> Identifier of alerted contact
+                    'checkid'     : <String> Identifier of check
+                    'time'        : <Integer> Time of alert generation. Format
+                                              UNIX time
+                    'via'         : <String> Alert medium ['email', 'sms',
+                                                           'twitter', 'iphone',
+                                                           'android']
+                    'status'      : <String> Alert status ['sent', 'delivered',
+                                                           'error',
+                                                           'notdelivered',
+                                                           'nocredits']
+                    'messageshort': <String> Short description of message
+
+                    'messagefull' : <String> Full message body
+                    'sentto'      : <String> Target address, phone number, etc
+                    'charged'     : <Boolean> True if your account was charged
+                                              for this message
+                },
+                ...
+            ]
+        }
         """
 
         # Warn user about unhandled parameters
@@ -111,6 +140,9 @@ class Pingdom(object):
         return response.json['actions']
 
     def alerts(self, **parameters):
+        """A short-hand version of 'actions', returns list of alerts.
+            See parameters for actions()"""
+
         return self.actions(**parameters)['alerts']
 
     def getChecks(self, **parameters):
@@ -521,3 +553,143 @@ class Pingdom(object):
 
         return self.request("DELETE", "checks",
                             {'delcheckids': checkids}).json['message']
+
+    def credits(self):
+        """Gets credits list"""
+
+        return self.request("GET", "credits").json['credits']
+
+    def probes(self, **kwargs):
+        """Returns a list of all Pingdom probe servers
+
+        Parameters:
+
+            * limit -- Limits the number of returned probes to the specified
+                quantity
+                    Type: Integer
+
+            * offset -- Offset for listing (requires limit).
+                    Type: Integer
+                    Default: 0
+
+            * onlyactive -- Return only active probes
+                    Type: Boolean
+                    Default: False
+
+            * includedeleted -- Include old probes that are no longer in use
+                    Type: Boolean
+                    Default: False
+
+        Returned structure:
+        [
+            {
+                'id'        : <Integer> Unique probe id
+                'country'   : <String> Country
+                'city'      : <String> City
+                'name'      : <String> Name
+                'active'    : <Boolean> True if probe is active
+                'hostname'  : <String> DNS name
+                'ip'        : <String> IP address
+                'countryiso': <String> Country ISO code
+            },
+            ...
+        ]
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['limit', 'offset', 'onlyactive', 'includedeleted']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
+                                 'of probes()\n')
+
+        return self.request("GET", "probes", kwargs).json['probes']
+
+    def references(self):
+        """Get a reference of regions, timezones and date/time/number formats
+            and their identifiers.
+
+        Returned structure:
+        {
+            'regions' :
+            [
+                {
+                   'id'               : <Integer> Region identifier
+                   'description'      : <String> Region description
+                   'countryid'        : <Integer> Corresponding country
+                                                   identifier
+                   'datetimeformatid' : <Integer> Corresponding datetimeformat
+                                                   identifier
+                   'numberformatid'   : <Integer> Corresponding numberformat
+                                                   identifer
+                   'timezoneid'       : <Integer> Corresponding timezone
+                                                   identifier
+                },
+                ...
+            ],
+            'timezones' :
+            [
+                {
+                    'id'          : <Integer> Time zone identifier
+                    'description' : <String> Time zone description
+                },
+                ...
+            ],
+            'datetimeformats' :
+            [
+                {
+                    'id'          : <Integer> Date/time format identifer
+                    'description' : <String> Date/time format description
+                },
+                ...
+            ],
+            'numberformats' :
+            [
+                {
+                    'id'          : <Integer> Number format identifier
+                    'description' : <String> Number format description
+                },
+                ...
+            ],
+            'countries' :
+            [
+                {
+                    'id'  : <Integer> Country id
+                    'iso' : <String> Country ISO code
+                },
+                ...
+            ],
+            'phonecodes' :
+            [
+                {
+                    'countryid' : <Integer> Country id
+                    'name'      : <String> Country name
+                    'phonecode' : <String> Area phone code
+                },
+                ...
+            ]
+        }"""
+
+        return self.request("GET", "reference").json
+
+    def traceroute(self, host, probeid):
+        """Perform a traceroute to a specified target from a specified Pingdom
+            probe.
+
+            Provide hostname to check and probeid to check from
+
+        Returned structure:
+        {
+            'result'           : <String> Traceroute output
+            'probeid'          : <Integer> Probe identifier
+            'probedescription' : <String> Probe description
+        }
+        """
+
+        response = self.request('GET', 'traceroute', {'host': host,
+                                                      'probeid': probeid})
+        return response.json['traceroute']
+
+    def servertime(self):
+        """Get the current time of the API server in UNIX format"""
+
+        return self.request('GET', 'servertime').json['servertime']
