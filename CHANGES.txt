@@ -1,3 +1,4 @@
+v0.1.4, October 17th, 2012 -- Summary.average added, summary.hoursofday added, summary.outage added, summary.performance, summary.probes added, results added, contacts added, singletest added, settings partially implemented
 v0.1.3, October 16th, 2012 -- Added documenation for return structures, credits added, probes added, reference added, traceroute added, servertime added
 v0.1.2, October 13th, 2012 -- Code reorganization, improvements to analysis object, improved setup script, checks can now be modified and deleted
 v0.1.1, October 12th, 2012 -- Actions, Analyses, more Checks

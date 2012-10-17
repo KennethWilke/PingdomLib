@@ -2,7 +2,7 @@
 PingdomLib
 ==========
 
-v0.1.3
+v0.1.4
 ------
 
 This library exposes the functionality of the pingdom API for usage within
@@ -15,18 +15,11 @@ TODO
 API Calls not yet implemented
 -----------------------------
 
-* Contacts
 * Reports.email
 * Reports.public
 * Reports.shared
-* Results
-* Settings
-* Summary.average
-* Summary.outage
-* Summary.perforamnce
-* Summary.probes
-* Single
+* Settings (can get but not yet modify)
 
-Other features
---------------
-* Gzip Compression, enabled by default
+Other features to be added
+--------------------------
+* Gzip Compression

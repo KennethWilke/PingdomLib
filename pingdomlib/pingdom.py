@@ -2,6 +2,7 @@ import requests
 import sys
 
 from pingdomlib.check import PingdomCheck
+from pingdomlib.contact import PingdomContact
 
 server_address = 'https://api.pingdom.com'
 api_version = '2.0'
@@ -20,7 +21,7 @@ class Pingdom(object):
         self.shortlimit = ''
         self.longlimit = ''
 
-    def request(self, method, url, parameters=None):
+    def request(self, method, url, parameters=dict()):
         """Requests wrapper function"""
 
         # Method selection handling
@@ -45,6 +46,8 @@ class Pingdom(object):
 
         # Verify OK response
         if response.status_code != 200:
+            print response.url
+            sys.stderr.write('Returned data: %s\n' % response.json)
             response.raise_for_status()
 
         # Store pingdom api limits
@@ -181,7 +184,8 @@ class Pingdom(object):
         """Creates a new check with settings specified by provided parameters.
 
         Provide new check name, hostname and type along with any additional
-            optional parameters passed as keywords
+            optional parameters passed as keywords. Returns new PingdomCheck
+            instance
 
         Types available:
 
@@ -400,7 +404,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'url',
                                'encryption', 'port', 'auth', 'shouldcontain',
                                'shouldnotcontain', 'postdata']:
@@ -415,7 +419,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'url',
                                'encryption', 'port', 'auth', 'additionalurls']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
@@ -428,7 +432,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'port',
                                'stringtosend', 'stringtoexpect']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
@@ -441,7 +445,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
@@ -453,7 +457,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'expectedip',
                                'nameserver']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
@@ -466,7 +470,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'port',
                                'stringtosend', 'stringtoexpect']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
@@ -479,7 +483,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'port', 'auth',
                                'stringtoexpect', 'encryption']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
@@ -492,7 +496,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'port',
                                'stringtoexpect', 'encryption']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
@@ -505,7 +509,7 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendnotificationwhendown',
                                'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname', 'status',
+                               'created', 'type', 'hostname',
                                'lasterrortime', 'lasttesttime', 'port',
                                'stringtoexpect', 'encryption']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
@@ -693,3 +697,287 @@ class Pingdom(object):
         """Get the current time of the API server in UNIX format"""
 
         return self.request('GET', 'servertime').json['servertime']
+
+    def getContacts(self, **kwargs):
+        """Returns a list of all contacts.
+
+        Optional Parameters:
+
+            * limit -- Limits the number of returned contacts to the specified
+                quantity.
+                    Type: Integer
+                    Default: 100
+
+            * offset -- Offset for listing (requires limit.)
+                    Type: Integer
+                    Default: 0
+
+        Returned structure:
+        [
+            'id'                 : <Integer> Contact identifier
+            'name'               : <String> Contact name
+            'email'              : <String> Contact email
+            'cellphone'          : <String> Contact telephone
+            'countryiso'         : <String> Cellphone country ISO code
+            'defaultsmsprovider' : <String> Default SMS provider
+            'directtwitter'      : <Boolean> Send Tweets as direct messages
+            'twitteruser'        : <String> Twitter username
+            'paused'             : <Boolean> True if contact is pasued
+            'iphonetokens'       : <String list> iPhone tokens
+            'androidtokens'      : <String list> android tokens
+        ]
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['limit', 'offset']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
+                                 'of getContacts()\n')
+
+        return [PingdomContact(self, x) for x in
+                self.request("GET", "contacts", kwargs).json['contacts']]
+
+    def newContact(self, name, **kwargs):
+        """Create a new contact.
+
+        Provide new contact name and any optional arguments. Returns new
+            PingdomContact instance
+
+        Optional Parameters:
+
+            * email -- Contact email address
+                    Type: String
+
+            * cellphone -- Cellphone number, without the country code part. In
+                some countries you are supposed to exclude leading zeroes.
+                (Requires countrycode and countryiso)
+                    Type: String
+
+            * countrycode -- Cellphone country code (Requires cellphone and
+                countryiso)
+                    Type: String
+
+            * countryiso -- Cellphone country ISO code. For example: US (USA),
+                GB (Britain) or SE (Sweden) (Requires cellphone and
+                countrycode)
+                    Type: String
+
+            * defaultsmsprovider -- Default SMS provider
+                    Type: String ['clickatell', 'bulksms', 'esendex',
+                                  'cellsynt']
+
+            * directtwitter -- Send tweets as direct messages
+                    Type: Boolean
+                    Default: True
+
+            * twitteruser -- Twitter user
+                    Type: String
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['email', 'cellphone', 'countrycode', 'countryiso',
+                           'defaultsmsprovider', 'directtwitter',
+                           'twitteruser']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
+                                 'of newContact()\n')
+
+        kwargs['name'] = name
+        contactinfo = self.request("POST", "contacts", kwargs).json['contact']
+
+        return PingdomContact(self, contactinfo)
+
+    def modifyContacts(self, contactids, paused):
+        """Modifies a list of contacts.
+
+        Provide comma separated list of contact ids and desired paused state
+
+        Returns status message
+        """
+
+        response = self.request("PUT", "contacts", {'contactids': contactids,
+                                                    'paused': paused})
+        return response.json['message']
+
+    def deleteContacts(self, contactids):
+        """Deletes a list of contacts. CANNOT BE REVERSED!
+
+        Provide a comma-separated list of contactid's to delete
+
+        Returns status message
+        """
+
+        return self.request("DELETE", "contacts",
+                            {'delcheckids': contactids}).json['message']
+
+    def singleTest(self, host, checktype, **kwargs):
+        """Performs a single test using a specified Pingdom probe against a
+            specified target. Please note that this method is meant to be used
+            sparingly, not to set up your own monitoring solution.
+
+        Provide hostname and check type, followed by any optional arguments.
+
+        Types available:
+
+            * http
+            * httpcustom
+            * tcp
+            * ping
+            * dns
+            * udp
+            * smtp
+            * pop3
+
+        Optional arguments:
+
+            * probeid -- Probe to use for check
+                    Type: Integer
+                    Default: A random probe
+
+        See newCheck() docstring for type-specific arguments
+
+        Returned structure:
+        {
+            'status'         : <String> Test result status ['up, 'down']
+            'responsetime'   : <Integer> Response time in milliseconds
+            'statusdesc'     : <String> Short status description
+            'statusdesclong' : <String> Long status description
+            'probeid'        : <Integer> Probe identifier
+            'probedesc'      : <String> Probe description
+        }
+        """
+
+        if checktype == 'http':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'url',
+                               'encryption', 'port', 'auth', 'shouldcontain',
+                               'shouldnotcontain', 'postdata']:
+                    if key.startswith('requestheader') is not True:
+                        sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                         'argument of singleTest() for type ' +
+                                         "'http'\n")
+        elif checktype == 'httpcustom':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'url',
+                               'encryption', 'port', 'auth', 'additionalurls']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'httpcustom'\n")
+        elif checktype == 'tcp':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'port',
+                               'stringtosend', 'stringtoexpect']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'tcp'\n")
+        elif checktype == 'ping':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'ping'\n")
+        elif checktype == 'dns':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'expectedip',
+                               'nameserver']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'dns'\n")
+        elif checktype == 'udp':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'port',
+                               'stringtosend', 'stringtoexpect']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'udp'\n")
+        elif checktype == 'smtp':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'port', 'auth',
+                               'stringtoexpect', 'encryption']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'smtp'\n")
+        elif checktype == 'pop3':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'port',
+                               'stringtoexpect', 'encryption']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'pop3'\n")
+        elif checktype == 'imap':
+            # Warn user about unhandled parameters
+            for key in kwargs:
+                if key not in ['probeid', 'port',
+                               'stringtoexpect', 'encryption']:
+                    sys.stderr.write("'%s'" % key + ' is not a valid ' +
+                                     'argument of singleTest() for type ' +
+                                     "'imap'\n")
+        else:
+            raise Exception("Invalid checktype in singleTest()")
+
+        parameters = {'host': host, 'type': checktype}
+        for key, value in kwargs.iteritems():
+            parameters[key] = value
+
+        checkinfo = self.request('GET', "single", parameters)
+
+        return checkinfo.json['result']
+
+    def getSettings(self):
+        """Returns all account-specific settings.
+
+        Returned structure:
+        {
+            'firstname'           : <String> First name
+            'lastname'            : <String> Last name
+            'company'             : <String> Company
+            'email'               : <String> Email
+            'phone'               : <String> Phone
+            'phonecountryiso'     : <String> Phone country ISO code
+            'cellphone'           : <String> Cellphone
+            'cellphonecountryiso' : <String> Cellphone country ISO code
+            'address'             : <String> Address line 1
+            'address2'            : <String> Address line 2
+            'zip'                 : <String> Zip, postal code or equivalent
+            'location'            : <String> City / location
+            'state'               : <String> State or equivalent
+            'autologout'          : <Boolean> Enable auto-logout
+            'country'             :
+            {
+                'name'      : <String> Country name
+                'iso'       : <String> Country ISO-code
+                'countryid' : <Integer> Country identifier
+            }
+            'vatcode'             : <String> For certain EU countries, VAT-code
+            'region'              : <String> Region
+            'regionid'            : <Integer> Region identifier, see reference
+            'accountcreated'      : <Integer> Account creation timestamp
+            'timezone'            :
+            {
+                'id'          : <String> Timezone name
+                'description' : <String> Timezone description
+                'timezoneid'  : <Integer> Timezone identifier
+            }
+            'dateformat'          : <String> Date format
+            'timeformat'          : <String> Time format
+            'datetimeformatid'    : <Integer> Date/time format identifier
+            'numberformat'        : <String> Number format
+            'numberformatexample' : <String> Example of number presentation
+            'numberformatid'      : <Integer> Number format identifier
+            'publicreportscode'   : <String> URL code
+            'settingssaved'       : <Boolean> True if user has saved initial
+                                     settings in control panel
+        }
+        """
+
+        info = self.request('GET', 'settings').json['settings']
+        for key in sorted(info):
+            print key

@@ -36,12 +36,12 @@ class PingdomCheck(object):
 
     def __init__(self, instantiator, checkinfo=dict()):
         self.pingdom = instantiator
-        self.addDetails(checkinfo)
+        self.__addDetails__(checkinfo)
 
     def __getattr__(self, attr):
         # Pull variables from pingdom if unset
-        if attr in ['id', 'name', 'resolution', 'sendtoemail', 'sendtosms',
-                    'sendtotwitter', 'sendtoiphone',
+        if attr in ['name', 'resolution', 'sendtoemail', 'sendtosms',
+                    'sendtotwitter', 'sendtoiphone', 'paused',
                     'sendnotificationwhendown', 'notifyagainevery',
                     'notifywhenbackup', 'created', 'type', 'hostname',
                     'status', 'lasterrortime', 'lasttesttime']:
@@ -117,7 +117,7 @@ class PingdomCheck(object):
 
         return [PingdomAnalysis(self, x) for x in response.json['analysis']]
 
-    def addDetails(self, checkinfo):
+    def __addDetails__(self, checkinfo):
         """Fills attributes from a dictionary, uses special handling for the
             'type' key"""
 
@@ -137,11 +137,16 @@ class PingdomCheck(object):
                 # Store other key value pairs as attributes
                 object.__setattr__(self, key, checkinfo[key])
 
+        if 'status' in checkinfo and checkinfo['status'] == 'paused':
+            object.__setattr__(self, 'paused', True)
+        else:
+            object.__setattr__(self, 'paused', False)
+
     def getDetails(self):
         """Update check details, returns dictionary of details"""
 
         response = self.pingdom.request('GET', 'checks/%s' % self.id)
-        self.addDetails(response.json['check'])
+        self.__addDetails__(response.json['check'])
         return response.json['check']
 
     def modify(self, **kwargs):
@@ -337,3 +342,311 @@ class PingdomCheck(object):
 
         response = self.pingdom.request("DELETE", "checks/%s" % self.id)
         return response.json['message']
+
+    def averages(self, **kwargs):
+        """Get the average time / uptime value for a specified check and time
+            period.
+
+        Optional parameters:
+
+            * from -- Start time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: 0
+
+            * to - End time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: Current time
+
+            * probes -- Filter to only use results from a list of probes.
+                Format is a comma separated list of probe identifiers
+                    Type: String
+                    Default: All probes
+
+            * includeuptime -- Include uptime information
+                    Type: Boolean
+                    Default: False
+
+            * bycountry -- Split response times into country groups
+                    Type: Boolean
+                    Default: False
+
+            * byprobe -- Split response times into probe groups
+                    Type: Boolean
+                    Default: False
+
+        Returned structure:
+        {
+            'responsetime' :
+            {
+                'to'          : <Integer> Start time of period
+                'from'        : <Integer> End time of period
+                'avgresponse' : <Integer> Total average response time in
+                                 milliseconds
+            },
+            < More can be included with optional parameters >
+        }
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['from', 'to', 'probes', 'includeuptime',
+                           'bycountry', 'byprobe']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
+                                 '<PingdomCheck.averages()\n')
+
+        response = self.pingdom.request('GET', 'summary.average/%s' % self.id,
+                                        kwargs)
+
+        return response.json['summary']
+
+    def hoursofday(self, **kwargs):
+        """Returns the average response time for each hour of the day (0-23)
+            for a specific check over a selected time period. I.e. it shows you
+            what an average day looks like during that time period.
+
+        Optional parameters:
+
+            * from -- Start time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: One week earlier than 'to'
+
+            * to -- End time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: Current time
+
+            * probes -- Filter to only use results from a list of probes.
+                Format is a comma separated list of probe identifiers
+                    Type: String
+                    Default: All probes
+
+            * uselocaltime -- If true, use the user's local time zone for
+                results (from and to parameters should still be specified in
+                UTC). If false, use UTC for results.
+                    Type: Boolean
+                    Default: False
+
+        Returned structure:
+        [
+            {
+                'hour'       : <Integer> Hour of day (0-23). Please note that
+                                if data is missing for an individual hour, it's
+                                entry will not be included in the result.
+                'avgresponse': <Integer> Average response time(in milliseconds)
+                                for this hour of the day
+            },
+            ...
+        ]
+        """
+
+        # Warn user about unhanled parameters
+        for key in kwargs:
+            if key not in ['from', 'to', 'probes', 'uselocaltime']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
+                                 '<PingdomCheck.hoursofday()\n')
+
+        response = self.pingdom.request('GET', 'summary.hoursofday/%s' %
+                                        self.id, kwargs)
+
+        return response.json['hoursofday']
+
+    def outages(self, **kwargs):
+        """Get a list of status changes for a specified check and time period.
+            If order is speficied to descending, the list is ordered by newest
+            first. (Default is ordered by oldest first.)
+
+        Optional Parameters:
+
+            * from -- Start time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: One week earlier than 'to'
+
+            * to -- End time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: Current time
+
+            * order -- Sorting order of outages. Ascending or descending
+                    Type: String ['asc', 'desc']
+                    Default: asc
+
+        Returned structure:
+        [
+            {
+                'status'   : <String> Interval status
+                'timefrom' : <Integer> Interval start. Format is UNIX timestamp
+                'timeto'   : <Integer> Interval end. Format is UNIX timestamp
+            },
+            ...
+        ]
+        """
+
+        # Warn user about unhanled parameters
+        for key in kwargs:
+            if key not in ['from', 'to', 'order']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
+                                 '<PingdomCheck.outages()\n')
+
+        response = self.pingdom.request('GET', 'summary.outage/%s' % self.id,
+                                        kwargs)
+
+        return response.json['summary']['states']
+
+    def performance(self, **kwargs):
+        """For a given interval in time, return a list of sub intervals with
+            the given resolution. Useful for generating graphs. A sub interval
+            may be a week, a day or an hour depending on the choosen resolution
+
+        Optional Parameters:
+
+            * from -- Start time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: 10 intervals earlier than 'to'
+
+            * to -- End time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: Current time
+
+            * resolution -- Inteval size
+                    Type: String ['hour', 'day', 'week']
+                    Default: hour
+
+            * includeuptime -- Include uptime information
+                    Type: Boolean
+                    Default: False
+
+            * probes -- Filter to only use results from a list of probes.
+                Format is a comma separated list of probe identifiers. Can not
+                be used if includeuptime is set to true. Also note that this
+                can cause intervals to be omitted, since there may be no
+                results from the desired probes in them.
+                    Type: String
+                    Default: All probes
+
+            * order -- Sorting order of sub intervals. Ascending or descending.
+                    Type: String ['asc', 'desc']
+                    Default: asc
+
+        Returned structure:
+        {
+            <RESOLUTION> :
+            [
+                {
+                    'starttime'   : <Integer> Hour interval start. Format UNIX
+                                     timestamp
+                    'avgresponse' : <Integer> Average response time for this
+                                     interval in milliseconds
+                    'uptime'      : <Integer> Total uptime for this interval in
+                                     seconds
+                    'downtime'    : <Integer> Total downtime for this interval
+                                     in seconds
+                    'unmonitored' : <Integer> Total unmonitored time for this
+                                     interval in seconds
+                },
+                ...
+            ]
+        }
+        """
+
+        # Warn user about unhanled parameters
+        for key in kwargs:
+            if key not in ['from', 'to', 'resolution', 'includeuptime',
+                           'probes', 'order']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
+                                 '<PingdomCheck.performance()\n')
+
+        response = self.pingdom.request('GET', 'summary.performance/%s' %
+                                        self.id, kwargs)
+
+        return response.json['summary']
+
+    def probes(self, fromtime, totime=None):
+        """Get a list of probes that performed tests for a specified check
+            during a specified period."""
+
+        args = {'from': fromtime}
+        if totime:
+            args['to'] = totime
+
+        response = self.pingdom.request('GET', 'summary.probes/%s' % self.id,
+                                        args)
+
+        return response.json['probes']
+
+    def results(self, **kwargs):
+        """Return a list of raw test results for a specified check
+
+        Optional Parameters:
+
+            * from -- Start time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: 1 day prior to 'to'
+
+            * to -- End time of period. Format is UNIX timestamp
+                    Type: Integer
+                    Default: Current time
+
+            * probes -- Filter to only show results from a list of probes.
+                Format is a comma separated list of probe identifiers
+                    Type: String
+                    Default: All probes
+
+            * status -- Filter to only show results with specified statuses.
+                Format is a comma separated list of (down, up, unconfirmed,
+                unknown)
+                    Type: String
+                    Default: All statuses
+
+            * limit -- Number of results to show
+                    Type: Integer (max 1000)
+                    Default: 1000
+
+            * offset -- Number of results to skip
+                    Type: Integer (max 43200)
+                    Default: 0
+
+            * includeanalysis -- Attach available root cause analysis
+                identifiers to corresponding results
+                    Type: Boolean
+                    Default: False
+
+            * maxresponse -- Maximum response time (ms). If set, specified
+                interval must not be larger than 31 days.
+                    Type: Integer
+                    Default: None
+
+            * minresponse -- Minimum response time (ms). If set, specified
+                interval must not be larger than 31 days.
+                    Type: Integer
+                    Default: None
+
+        Returned structure:
+        {
+            'results' :
+            [
+                {
+                    'probeid'        : <Integer> Probe identifier
+                    'time'           : <Integer> Time when test was performed.
+                                        Format is UNIX timestamp
+                    'status'         : <String> Result status ['up', 'down',
+                                        'unconfirmed_down', 'unknown']
+                    'responsetime'   : <Integer> Response time in milliseconds
+                                        Will be 0 if no response was received
+                    'statusdesc'     : <String> Short status description
+                    'statusdesclong' : <String> Long status description
+                    'analysisid'     : <Integer> Analysis identifier
+                },
+                ...
+            ],
+            'activeprobes' : <Integer List> Probe identifiers in result set
+        }
+        """
+
+        # Warn user about unhanled parameters
+        for key in kwargs:
+            if key not in ['from', 'to', 'probes', 'status', 'limit', 'offset',
+                           'includeanalysis', 'maxresponse', 'minresponse']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
+                                 '<PingdomCheck.results()\n')
+
+        response = self.pingdom.request('GET', 'results/%s' % self.id, kwargs)
+
+        return response.json
