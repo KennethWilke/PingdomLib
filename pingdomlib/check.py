@@ -67,6 +67,10 @@ class PingdomCheck(object):
                 object.__setattr__(self, key, value)
         object.__setattr__(self, key, value)
 
+    def __str__(self):
+        return "<PingdomCheck (%s)%s is '%s'>" % (self.id, self.name,
+                                                  self.status)
+
     def getAnalyses(self, **parameters):
         """Returns a list of the latest root cause analysis results for a
             specified check.
@@ -338,7 +342,9 @@ class PingdomCheck(object):
         return response.json['message']
 
     def delete(self):
-        """Deletes the check from pingdom, CANNOT BE REVERSED!"""
+        """Deletes the check from pingdom, CANNOT BE REVERSED!
+
+        Returns status message of operation"""
 
         response = self.pingdom.request("DELETE", "checks/%s" % self.id)
         return response.json['message']
@@ -353,7 +359,7 @@ class PingdomCheck(object):
                     Type: Integer
                     Default: 0
 
-            * to - End time of period. Format is UNIX timestamp
+            * to -- End time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: Current time
 
@@ -408,7 +414,8 @@ class PingdomCheck(object):
 
             * from -- Start time of period. Format is UNIX timestamp
                     Type: Integer
-                    Default: One week earlier than 'to'
+                    Default: One week earlpep8 pingdomlib/*.py
+ier than 'to'
 
             * to -- End time of period. Format is UNIX timestamp
                     Type: Integer
@@ -650,3 +657,20 @@ class PingdomCheck(object):
         response = self.pingdom.request('GET', 'results/%s' % self.id, kwargs)
 
         return response.json
+
+    def publishPublicReport(self):
+        """Activate public report for this check.
+
+        Returns status message"""
+
+        response = self.pingdom.request('PUT', 'reports.public/%s' % self.id)
+        return respose.json['message']
+
+    def removePublicReport(self):
+        """Deactivate public report for this check.
+
+        Returns status message"""
+
+        response = self.pingdom.request('DELETE',
+                                        'reports.public/%s' % self.id)
+        return respose.json['message']

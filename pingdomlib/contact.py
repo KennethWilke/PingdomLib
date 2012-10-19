@@ -3,7 +3,18 @@ class PingdomContact(object):
 
     Attributes:
 
-        * id -- Check identifier"""
+        * id -- Contact identifier
+        * name -- Contact name
+        * email -- Contact email
+        * cellphone -- Contact cellphone
+        * countryiso -- Cellphone country ISO code
+        * defaultsmsprovider -- Default SMS provider
+        * twitteruser -- Twitter username
+        * directtwitter -- Send tweets as direct messages
+        * iphonetokens -- List of iPhone tokens
+        * androidtokens -- List of android tokens
+        * paused -- True if contact is paused
+        """
 
     def __init__(self, instantiator, contactinfo=dict()):
         self.pingdom = instantiator

@@ -3,13 +3,24 @@ import sys
 
 from pingdomlib.check import PingdomCheck
 from pingdomlib.contact import PingdomContact
+from pingdomlib.reports import PingdomEmailReport, PingdomSharedReport
 
 server_address = 'https://api.pingdom.com'
 api_version = '2.0'
 
 
 class Pingdom(object):
-    """Main connection object to interact with pingdom"""
+    """Main connection object to interact with pingdom
+
+    Attributes:
+
+        * pushChanges -- This boolean controls if changes are automatically
+            pushed to pingdom
+
+        * shortlimit -- String containing short api rate limit details
+
+        * longlimit -- String containing long api rate limit details
+    """
 
     def __init__(self, username, password, apikey, pushchanges=True,
                  server=server_address):
@@ -981,3 +992,251 @@ class Pingdom(object):
         info = self.request('GET', 'settings').json['settings']
         for key in sorted(info):
             print key
+
+    def modifySettings(self, **kwargs):
+        """Modify account-specific settings.
+
+        Returns status message for operation
+
+        Optional parameters:
+
+            * firstname -- First name
+                    Type: String
+
+            * lastname -- Last name
+                    Type: String
+
+            * company -- Company
+                    Type: String
+
+            * email -- Email (Please note that your email is used for
+                authentication purposes such as using this API or logging into
+                the Pingdom Panel)
+                    Type: String
+
+            * cellphone -- Cellphone (without country code)
+                (Requires cellcountrycode and cellcountryiso)
+                    Type: String
+
+            * cellcountrycode -- Cellphone country code, for example 1 (USA)
+                or 46 (Sweden)
+                    Type: Integer
+
+            * cellcountryiso -- Cellphone country ISO code, for example
+                US(USA) or SE (Sweden)
+                    Type: String
+
+            * phone -- Phone (without country code) (Requires phonecountrycode
+                and phonecountryiso)
+                    Type: String
+
+            * phonecountrycode -- Phone country code, for example 1 (USA)
+                or 46 (Sweden)
+                    Type: Integer
+
+            * phonecountryiso -- Phone country ISO code, for example US (USA)
+                or SE (Sweden)
+                    Type: String
+
+            * address -- Address line 1
+                    Type: String
+
+            * address2 -- Address line 2
+                    Type: String
+
+            * zip -- Zip, postal code or equivalent
+                    Type: String
+
+            * location -- City / location
+                    Type: String
+
+            * state -- State, province or equivalent
+                    Type: String
+
+            * countryiso -- Country ISO code, for example US (USA)
+                or SE (Sweden)
+                    Type: String
+
+            * vatcode -- For certain EU countries, VAT-code.
+                Example: SE123456789
+                    Type: String
+
+            * autologout -- Enable auto-logout
+                    Type: Boolean
+
+            * regionid -- Region identifier, for localization purposes.
+                0 for "Custom"/none. See the API resource "Reference" for more
+                information
+                    Type: Integer
+
+            * timezoneid -- Time zone identifier. See the API resource
+                "Reference" for more information
+                    Type: Integer
+
+            * datetimeformatid -- Date/time format identifier. See the API
+                resource "Reference" for more information
+                    Type: Integer
+
+            * numberformatid -- Number format identifier. See the API resource
+                "Reference" for more information
+                    Type: Integer
+
+            * pubrcustomdesign -- Use custom design for public reports
+                    Type: Boolean
+
+            * pubrtextcolor -- Public reports, custom text color
+                (Example: FEFFFE or 99CC00)
+                    Type: String
+
+            * pubrbackgroundcolor -- Public reports, background color
+                (Example: FEFFFE or 99CC00)
+                    Type: String
+
+            * pubrlogourl -- Public reports, URL to custom logotype.
+                This parameter is currently disabled for public use.
+                (Example: stats.pingdom.com/images/logo.png)
+                    Type: String
+
+            * pubrmonths -- Public reports, nuber of months to show
+                    Type: String ['none', 'all', '3']
+
+            * pubrshowoverview -- Public reports, enable overview
+                    Type: Boolean
+
+            * pubrcustomdomain -- Public reports, custom domain. Must be a DNS
+                CNAME with target stats.pingdom.com
+                    Type: Boolean
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['firstname', 'lastname', 'company', 'email',
+                           'cellphone', 'cellcountrycode', 'cellcountryiso',
+                           'phone', 'phonecountrycode', 'phonecountryiso',
+                           'address', 'address2', 'zip', 'location', 'state',
+                           'countryiso', 'vatcode', 'autologout', 'regionid',
+                           'timezoneid', 'datetimeformatid', 'numberformatid',
+                           'pubrcustomdesign', 'pubrtextcolor',
+                           'pubrbackgroundcolor', 'pubrlogourl', 'pubrmonths',
+                           'pubrshowoverview', 'pubrcustomdomain']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
+                                 'of modifySettings()\n')
+
+        return self.request('PUT', 'settings', kwargs).json['message']
+
+    def getEmailReports(self):
+        """Returns a list of PingdomEmailReport instances."""
+
+        reports = [PingdomEmailReport(self, x) for x in
+                   self.request('GET', 'reports.email').json['subscriptions']]
+
+        return reports
+
+    def newEmailReport(self, name, **kwargs):
+        """Creates a new email report
+
+        Returns status message for operation
+
+        Optional parameters:
+
+            * checkid -- Check identifier. If omitted, this will be an
+                overview report
+                    Type: Integer
+
+            * frequency -- Report frequency
+                    Type: String ['monthly', 'weekly', 'daily']
+
+            * contactids -- Comma separated list of receiving contact
+                identifiers
+                    Type: String
+
+            * additionalemails -- Comma separated list of additional receiving
+                emails
+                    Type: String
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['checkid', 'frequency', 'contactids',
+                           'additionalemails']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
+                                 'of newEmailReport()\n')
+
+        parameters = {'name': name}
+        for key, value in kwargs.iteritems():
+            parameters[key] = value
+
+        return self.request('POST', 'reports.email',
+                            parameters).json['message']
+
+    def getPublicReports(self):
+        """Returns a list of public (web-based) reports
+
+        Returned structure:
+        [
+            {
+                'checkid'   : <Integer> Check identifier
+                'checkname' : <String> Check name
+                'reporturl' : <String> URL to report
+            },
+            ...
+        ]
+        """
+
+        return self.request('GET', 'reports.public').json['public']
+
+    def getSharedReports(self):
+        """Returns a list of PingdomSharedReport instances"""
+
+        response = self.request('GET',
+                                'reports.shared').json['shared']['banners']
+
+        reports = [PingdomSharedReport(self, x) for x in response]
+        return reports
+
+    def newSharedReport(self, checkid, **kwargs):
+        """Create a shared report (banner).
+
+        Returns status message for operation
+
+        Optional parameters:
+
+            * auto -- Automatic period (If false, requires: fromyear,
+                frommonth, fromday, toyear, tomonth, today)
+                    Type: Boolean
+
+            * type -- Banner type
+                    Type: String ['uptime', 'response']
+
+            * fromyear -- Period start: year
+                    Type: Integer
+
+            * frommonth -- Period start: month
+                    Type: Integer
+
+            * fromday -- Period start: day
+                    Type: Integer
+
+            * toyear -- Period end: year
+                    Type: Integer
+
+            * tomonth -- Period end: month
+                    Type: Integer
+
+            * today -- Period end: day
+                    Type: Integer
+        """
+
+        # Warn user about unhandled parameters
+        for key in kwargs:
+            if key not in ['auto', 'type', 'fromyear', 'frommonth', 'fromday',
+                           'toyear', 'tomonth', 'today', 'sharedtype']:
+                sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
+                                 'of newSharedReport()\n')
+
+        parameters = {'checkid': name, 'sharedtype': 'banner'}
+        for key, value in kwargs.iteritems():
+            parameters[key] = value
+
+        return self.request('POST', 'reports.shared',
+                            parameters).json['message']
