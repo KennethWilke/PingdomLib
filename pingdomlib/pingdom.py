@@ -58,7 +58,7 @@ class Pingdom(object):
         # Verify OK response
         if response.status_code != 200:
             print response.url
-            sys.stderr.write('Returned data: %s\n' % response.json)
+            sys.stderr.write('Returned data: %s\n' % response.json())
             response.raise_for_status()
 
         # Store pingdom api limits
@@ -151,7 +151,7 @@ class Pingdom(object):
 
         response = self.request('GET', 'actions', parameters)
 
-        return response.json['actions']
+        return response.json()['actions']
 
     def alerts(self, **parameters):
         """A short-hand version of 'actions', returns list of alerts.
@@ -182,7 +182,7 @@ class Pingdom(object):
 
         response = self.request('GET', 'checks', parameters)
 
-        return [PingdomCheck(self, x) for x in response.json['checks']]
+        return [PingdomCheck(self, x) for x in response.json()['checks']]
 
     def getCheck(self, checkid):
         """Returns a detailed description of a specified check."""
@@ -534,7 +534,7 @@ class Pingdom(object):
             parameters[key] = value
 
         checkinfo = self.request("POST", 'checks', parameters)
-        return self.getCheck(checkinfo.json['check']['id'])
+        return self.getCheck(checkinfo.json()['check']['id'])
 
     def modifyChecks(self, **kwargs):
         """Pause or change resolution for multiple checks in one bulk call.
@@ -558,7 +558,7 @@ class Pingdom(object):
                 sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
                                  'of newCheck()\n')
 
-        return self.request("PUT", "checks", kwargs).json['message']
+        return self.request("PUT", "checks", kwargs).json()['message']
 
     def deleteChecks(self, checkids):
         """Deletes a list of checks, CANNOT BE REVERSED!
@@ -567,12 +567,12 @@ class Pingdom(object):
         """
 
         return self.request("DELETE", "checks",
-                            {'delcheckids': checkids}).json['message']
+                            {'delcheckids': checkids}).json()['message']
 
     def credits(self):
         """Gets credits list"""
 
-        return self.request("GET", "credits").json['credits']
+        return self.request("GET", "credits").json()['credits']
 
     def probes(self, **kwargs):
         """Returns a list of all Pingdom probe servers
@@ -617,7 +617,7 @@ class Pingdom(object):
                 sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
                                  'of probes()\n')
 
-        return self.request("GET", "probes", kwargs).json['probes']
+        return self.request("GET", "probes", kwargs).json()['probes']
 
     def references(self):
         """Get a reference of regions, timezones and date/time/number formats
@@ -684,7 +684,7 @@ class Pingdom(object):
             ]
         }"""
 
-        return self.request("GET", "reference").json
+        return self.request("GET", "reference").json()
 
     def traceroute(self, host, probeid):
         """Perform a traceroute to a specified target from a specified Pingdom
@@ -702,12 +702,12 @@ class Pingdom(object):
 
         response = self.request('GET', 'traceroute', {'host': host,
                                                       'probeid': probeid})
-        return response.json['traceroute']
+        return response.json()['traceroute']
 
     def servertime(self):
         """Get the current time of the API server in UNIX format"""
 
-        return self.request('GET', 'servertime').json['servertime']
+        return self.request('GET', 'servertime').json()['servertime']
 
     def getContacts(self, **kwargs):
         """Returns a list of all contacts.
@@ -746,7 +746,7 @@ class Pingdom(object):
                                  'of getContacts()\n')
 
         return [PingdomContact(self, x) for x in
-                self.request("GET", "contacts", kwargs).json['contacts']]
+                self.request("GET", "contacts", kwargs).json()['contacts']]
 
     def newContact(self, name, **kwargs):
         """Create a new contact.
@@ -794,7 +794,7 @@ class Pingdom(object):
                                  'of newContact()\n')
 
         kwargs['name'] = name
-        contactinfo = self.request("POST", "contacts", kwargs).json['contact']
+        contactinfo = self.request("POST", "contacts", kwargs).json()['contact']
 
         return PingdomContact(self, contactinfo)
 
@@ -808,7 +808,7 @@ class Pingdom(object):
 
         response = self.request("PUT", "contacts", {'contactids': contactids,
                                                     'paused': paused})
-        return response.json['message']
+        return response.json()['message']
 
     def deleteContacts(self, contactids):
         """Deletes a list of contacts. CANNOT BE REVERSED!
@@ -819,7 +819,7 @@ class Pingdom(object):
         """
 
         return self.request("DELETE", "contacts",
-                            {'delcheckids': contactids}).json['message']
+                            {'delcheckids': contactids}).json()['message']
 
     def singleTest(self, host, checktype, **kwargs):
         """Performs a single test using a specified Pingdom probe against a
@@ -940,7 +940,7 @@ class Pingdom(object):
 
         checkinfo = self.request('GET', "single", parameters)
 
-        return checkinfo.json['result']
+        return checkinfo.json()['result']
 
     def getSettings(self):
         """Returns all account-specific settings.
@@ -989,7 +989,7 @@ class Pingdom(object):
         }
         """
 
-        info = self.request('GET', 'settings').json['settings']
+        info = self.request('GET', 'settings').json()['settings']
         for key in sorted(info):
             print key
 
@@ -1122,13 +1122,13 @@ class Pingdom(object):
                 sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
                                  'of modifySettings()\n')
 
-        return self.request('PUT', 'settings', kwargs).json['message']
+        return self.request('PUT', 'settings', kwargs).json()['message']
 
     def getEmailReports(self):
         """Returns a list of PingdomEmailReport instances."""
 
         reports = [PingdomEmailReport(self, x) for x in
-                   self.request('GET', 'reports.email').json['subscriptions']]
+                   self.request('GET', 'reports.email').json()['subscriptions']]
 
         return reports
 
@@ -1167,7 +1167,7 @@ class Pingdom(object):
             parameters[key] = value
 
         return self.request('POST', 'reports.email',
-                            parameters).json['message']
+                            parameters).json()['message']
 
     def getPublicReports(self):
         """Returns a list of public (web-based) reports
@@ -1183,13 +1183,13 @@ class Pingdom(object):
         ]
         """
 
-        return self.request('GET', 'reports.public').json['public']
+        return self.request('GET', 'reports.public').json()['public']
 
     def getSharedReports(self):
         """Returns a list of PingdomSharedReport instances"""
 
         response = self.request('GET',
-                                'reports.shared').json['shared']['banners']
+                                'reports.shared').json()['shared']['banners']
 
         reports = [PingdomSharedReport(self, x) for x in response]
         return reports
@@ -1239,4 +1239,4 @@ class Pingdom(object):
             parameters[key] = value
 
         return self.request('POST', 'reports.shared',
-                            parameters).json['message']
+                            parameters).json()['message']

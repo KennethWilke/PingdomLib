@@ -88,7 +88,7 @@ class PingdomContact(object):
 
         response = self.pingdom.request('PUT', 'contacts/%s' % self.id, kwargs)
 
-        return response.json['message']
+        return response.json()['message']
 
     def delete(self):
         """Deletes a contact. CANNOT BE REVERSED!
@@ -96,4 +96,4 @@ class PingdomContact(object):
         Returns status message"""
 
         response = self.pingdom.request('DELETE', 'contacts/%s' % self.id)
-        return response.json['message']
+        return response.json()['message']

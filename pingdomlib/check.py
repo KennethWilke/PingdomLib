@@ -119,7 +119,7 @@ class PingdomCheck(object):
         response = self.pingdom.request('GET', 'analysis/%s' % self.id,
                                         parameters)
 
-        return [PingdomAnalysis(self, x) for x in response.json['analysis']]
+        return [PingdomAnalysis(self, x) for x in response.json()['analysis']]
 
     def __addDetails__(self, checkinfo):
         """Fills attributes from a dictionary, uses special handling for the
@@ -150,8 +150,8 @@ class PingdomCheck(object):
         """Update check details, returns dictionary of details"""
 
         response = self.pingdom.request('GET', 'checks/%s' % self.id)
-        self.__addDetails__(response.json['check'])
-        return response.json['check']
+        self.__addDetails__(response.json()['check'])
+        return response.json()['check']
 
     def modify(self, **kwargs):
         """Modify settings for a check. The provided settings will overwrite
@@ -339,7 +339,7 @@ class PingdomCheck(object):
 
         response = self.pingdom.request("PUT", 'checks/%s' % self.id, kwargs)
 
-        return response.json['message']
+        return response.json()['message']
 
     def delete(self):
         """Deletes the check from pingdom, CANNOT BE REVERSED!
@@ -347,7 +347,7 @@ class PingdomCheck(object):
         Returns status message of operation"""
 
         response = self.pingdom.request("DELETE", "checks/%s" % self.id)
-        return response.json['message']
+        return response.json()['message']
 
     def averages(self, **kwargs):
         """Get the average time / uptime value for a specified check and time
@@ -403,7 +403,7 @@ class PingdomCheck(object):
         response = self.pingdom.request('GET', 'summary.average/%s' % self.id,
                                         kwargs)
 
-        return response.json['summary']
+        return response.json()['summary']
 
     def hoursofday(self, **kwargs):
         """Returns the average response time for each hour of the day (0-23)
@@ -454,7 +454,7 @@ ier than 'to'
         response = self.pingdom.request('GET', 'summary.hoursofday/%s' %
                                         self.id, kwargs)
 
-        return response.json['hoursofday']
+        return response.json()['hoursofday']
 
     def outages(self, **kwargs):
         """Get a list of status changes for a specified check and time period.
@@ -495,7 +495,7 @@ ier than 'to'
         response = self.pingdom.request('GET', 'summary.outage/%s' % self.id,
                                         kwargs)
 
-        return response.json['summary']['states']
+        return response.json()['summary']['states']
 
     def performance(self, **kwargs):
         """For a given interval in time, return a list of sub intervals with
@@ -563,7 +563,7 @@ ier than 'to'
         response = self.pingdom.request('GET', 'summary.performance/%s' %
                                         self.id, kwargs)
 
-        return response.json['summary']
+        return response.json()['summary']
 
     def probes(self, fromtime, totime=None):
         """Get a list of probes that performed tests for a specified check
@@ -576,7 +576,7 @@ ier than 'to'
         response = self.pingdom.request('GET', 'summary.probes/%s' % self.id,
                                         args)
 
-        return response.json['probes']
+        return response.json()['probes']
 
     def results(self, **kwargs):
         """Return a list of raw test results for a specified check
@@ -656,7 +656,7 @@ ier than 'to'
 
         response = self.pingdom.request('GET', 'results/%s' % self.id, kwargs)
 
-        return response.json
+        return response.json()
 
     def publishPublicReport(self):
         """Activate public report for this check.
@@ -664,7 +664,7 @@ ier than 'to'
         Returns status message"""
 
         response = self.pingdom.request('PUT', 'reports.public/%s' % self.id)
-        return respose.json['message']
+        return respose.json()['message']
 
     def removePublicReport(self):
         """Deactivate public report for this check.
@@ -673,4 +673,4 @@ ier than 'to'
 
         response = self.pingdom.request('DELETE',
                                         'reports.public/%s' % self.id)
-        return respose.json['message']
+        return respose.json()['message']

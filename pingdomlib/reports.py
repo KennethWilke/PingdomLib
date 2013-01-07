@@ -61,13 +61,13 @@ class PingdomEmailReport(object):
         response = self.pingdom.request("PUT", 'reports.email/%s' % self.id,
                                         kwargs)
 
-        return response.json['message']
+        return response.json()['message']
 
     def delete(self):
         """Delete this email report"""
 
         response = self.pingdom.request('DELETE', 'reports.email/%s' % self.id)
-        return response.json['message']
+        return response.json()['message']
 
 
 class PingdomSharedReport(object):
@@ -100,4 +100,4 @@ class PingdomSharedReport(object):
 
         response = self.pingdom.request('DELETE',
                                         'reports.shared/%s' % self.id)
-        return response.json['message']
+        return response.json()['message']
