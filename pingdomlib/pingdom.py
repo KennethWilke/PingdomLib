@@ -413,10 +413,9 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'url',
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname', 'url',
                                'encryption', 'port', 'auth', 'shouldcontain',
                                'shouldnotcontain', 'postdata']:
                     if key.startswith('requestheader') is not True:
@@ -428,10 +427,9 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'url',
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname', 'url',
                                'encryption', 'port', 'auth', 'additionalurls']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
@@ -441,10 +439,9 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'port',
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname', 'port',
                                'stringtosend', 'stringtoexpect']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
@@ -454,10 +451,9 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime']:
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'ping'\n")
@@ -466,11 +462,10 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'expectedip',
-                               'nameserver']:
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname',
+                               'expectedip', 'nameserver']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'dns'\n")
@@ -479,10 +474,9 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'port',
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname', 'port',
                                'stringtosend', 'stringtoexpect']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
@@ -492,11 +486,10 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'port', 'auth',
-                               'stringtoexpect', 'encryption']:
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname', 'port',
+                               'auth', 'stringtoexpect', 'encryption']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'smtp'\n")
@@ -505,10 +498,9 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'port',
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname', 'port',
                                'stringtoexpect', 'encryption']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
@@ -518,10 +510,9 @@ class Pingdom(object):
             for key in kwargs:
                 if key not in ['paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
-                               'sendtoiphone', 'sendnotificationwhendown',
-                               'notifyagainevery', 'notifywhenbackup',
-                               'created', 'type', 'hostname',
-                               'lasterrortime', 'lasttesttime', 'port',
+                               'sendtoiphone', 'sendtoandroid',
+                               'sendnotificationwhendown', 'notifyagainevery',
+                               'notifywhenbackup', 'type', 'hostname', 'port',
                                'stringtoexpect', 'encryption']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
