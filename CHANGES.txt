@@ -1,3 +1,5 @@
+v1.0, October 26th, 2013 -- Corrected warnings for Pingdom.newCheck, only 1 minor bug report in a year of beta so promoted to stable release
+v0.1.6, January 7, 2013 -- Updated usage of requests library
 v0.1.5, October 19th, 2012 -- Settings implementation complete, improved documentation, reports.email added, reports.public added, reports.shared added. BETA release
 v0.1.4, October 17th, 2012 -- Summary.average added, summary.hoursofday added, summary.outage added, summary.performance, summary.probes added, results added, contacts added, singletest added, settings partially implemented
 v0.1.3, October 16th, 2012 -- Added documenation for return structures, credits added, probes added, reference added, traceroute added, servertime added
