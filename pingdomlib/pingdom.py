@@ -22,12 +22,13 @@ class Pingdom(object):
         * longlimit -- String containing long api rate limit details
     """
 
-    def __init__(self, username, password, apikey, pushchanges=True,
-                 server=server_address):
+    def __init__(self, username, password, apikey, accountemail=None,
+                 pushchanges=True, server=server_address):
         self.pushChanges = pushchanges
         self.username = username
         self.password = password
         self.apikey = apikey
+        self.accountemail = accountemail
         self.url = '%s/api/%s/' % (server, api_version)
         self.shortlimit = ''
         self.longlimit = ''
@@ -35,23 +36,27 @@ class Pingdom(object):
     def request(self, method, url, parameters=dict()):
         """Requests wrapper function"""
 
+        headers = {'App-Key': self.apikey}
+        if self.accountemail:
+            headers.update({'Account-Email': self.accountemail})
+
         # Method selection handling
         if method.upper() == 'GET':
             response = requests.get(self.url + url, params=parameters,
                                     auth=(self.username, self.password),
-                                    headers={'App-Key': self.apikey})
+                                    headers=headers)
         elif method.upper() == 'POST':
             response = requests.post(self.url + url, params=parameters,
                                      auth=(self.username, self.password),
-                                     headers={'App-Key': self.apikey})
+                                     headers=headers)
         elif method.upper() == 'PUT':
             response = requests.put(self.url + url, params=parameters,
                                     auth=(self.username, self.password),
-                                    headers={'App-Key': self.apikey})
+                                    headers=headers)
         elif method.upper() == 'DELETE':
             response = requests.delete(self.url + url, params=parameters,
                                        auth=(self.username, self.password),
-                                       headers={'App-Key': self.apikey})
+                                       headers=headers)
         else:
             raise Exception("Invalid method in pingdom request")
 
