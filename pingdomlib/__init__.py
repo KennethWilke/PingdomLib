@@ -1,6 +1,6 @@
 """
 =================
-PingdomLib v0.1.5
+PingdomLib v1.1
 =================
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 

@@ -1,3 +1,4 @@
+v1.1, December 30th, 2013 -- Multi-User authentication added by clouserw
 v1.0, October 26th, 2013 -- Corrected warnings for Pingdom.newCheck, only 1 minor bug report in a year of beta so promoted to stable release
 v0.1.6, January 7, 2013 -- Updated usage of requests library
 v0.1.5, October 19th, 2012 -- Settings implementation complete, improved documentation, reports.email added, reports.public added, reports.shared added. BETA release

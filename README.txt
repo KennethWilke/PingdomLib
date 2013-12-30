@@ -1,5 +1,5 @@
 ===============
-PingdomLib v1.0
+PingdomLib v1.1
 ===============
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -81,6 +81,10 @@ Get outages for a specific check
                                               timestamp_start, timestamp_end,
                                               (outage['timeto'] -
                                               outage['timefrom']) / 60)
+
+Contributors
+============
+Wil Clouser
 
 Special thanks
 ==============
