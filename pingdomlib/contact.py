@@ -36,7 +36,6 @@ class PingdomContact(object):
 
         # Auto-load instance attributes from passed in dictionary
         for key in contactinfo:
-            print 'adding key %s' % key
             object.__setattr__(self, key, contactinfo[key])
 
     def modify(self, **kwargs):
