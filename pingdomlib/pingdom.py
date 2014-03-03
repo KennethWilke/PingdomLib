@@ -62,7 +62,8 @@ class Pingdom(object):
 
         # Verify OK response
         if response.status_code != 200:
-            print response.url
+            sys.stderr.write('ERROR from %s: %d' % (response.url,
+                                                    response.status_code))
             sys.stderr.write('Returned data: %s\n' % response.json())
             response.raise_for_status()
 
@@ -790,7 +791,8 @@ class Pingdom(object):
                                  'of newContact()\n')
 
         kwargs['name'] = name
-        contactinfo = self.request("POST", "contacts", kwargs).json()['contact']
+        contactinfo = self.request("POST", "contacts",
+                                   kwargs).json()['contact']
 
         return PingdomContact(self, contactinfo)
 
@@ -985,9 +987,7 @@ class Pingdom(object):
         }
         """
 
-        info = self.request('GET', 'settings').json()['settings']
-        for key in sorted(info):
-            print key
+        return self.request('GET', 'settings').json()['settings']
 
     def modifySettings(self, **kwargs):
         """Modify account-specific settings.
@@ -1124,7 +1124,8 @@ class Pingdom(object):
         """Returns a list of PingdomEmailReport instances."""
 
         reports = [PingdomEmailReport(self, x) for x in
-                   self.request('GET', 'reports.email').json()['subscriptions']]
+                   self.request('GET',
+                                'reports.email').json()['subscriptions']]
 
         return reports
 

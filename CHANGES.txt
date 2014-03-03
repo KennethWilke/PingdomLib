@@ -1,3 +1,4 @@
+v1.2, March 3rd, 2014 -- Fix to settings call, removed debug print statements
 v1.1, December 30th, 2013 -- Multi-User authentication added by clouserw
 v1.0, October 26th, 2013 -- Corrected warnings for Pingdom.newCheck, only 1 minor bug report in a year of beta so promoted to stable release
 v0.1.6, January 7, 2013 -- Updated usage of requests library
