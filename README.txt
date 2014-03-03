@@ -85,6 +85,7 @@ Get outages for a specific check
 Contributors
 ============
 Wil Clouser
+Ash Berlin
 
 Special thanks
 ==============
