@@ -17,7 +17,7 @@ setup(
     description='A documented python library to consume the full pingdom API',
     long_description=open('README.txt').read(),
     install_requires=[
-        "requests >= 0.14.1",
+        "requests >= 2.2.1",
         "wsgiref >= 0.1.2",
     ],
 )
