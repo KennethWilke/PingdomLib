@@ -86,6 +86,7 @@ Contributors
 ============
 Wil Clouser
 Ash Berlin
+Wu Jiang
 
 Special thanks
 ==============
