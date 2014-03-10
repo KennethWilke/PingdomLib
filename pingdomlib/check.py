@@ -414,8 +414,7 @@ class PingdomCheck(object):
 
             * from -- Start time of period. Format is UNIX timestamp
                     Type: Integer
-                    Default: One week earlpep8 pingdomlib/*.py
-ier than 'to'
+                    Default: One week earlier than 'to'
 
             * to -- End time of period. Format is UNIX timestamp
                     Type: Integer
