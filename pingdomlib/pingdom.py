@@ -263,6 +263,11 @@ class Pingdom(object):
                     Type: Boolean
                     Default: True
 
+            * use_legacy_notifications -- Use the old notifications instead of
+                BeepManager
+                    Type: Boolean
+                    Default: False
+
         HTTP check options:
 
             * url -- Target path on server
@@ -423,7 +428,8 @@ class Pingdom(object):
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname', 'url',
                                'encryption', 'port', 'auth', 'shouldcontain',
-                               'shouldnotcontain', 'postdata']:
+                               'shouldnotcontain', 'postdata',
+                               'use_legacy_notifications']:
                     if key.startswith('requestheader') is not True:
                         sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                          'argument of newCheck() for type ' +
@@ -436,7 +442,8 @@ class Pingdom(object):
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname', 'url',
-                               'encryption', 'port', 'auth', 'additionalurls']:
+                               'encryption', 'port', 'auth', 'additionalurls',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'httpcustom'\n")
@@ -448,7 +455,8 @@ class Pingdom(object):
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname', 'port',
-                               'stringtosend', 'stringtoexpect']:
+                               'stringtosend', 'stringtoexpect',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'tcp'\n")
@@ -459,7 +467,8 @@ class Pingdom(object):
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
-                               'notifywhenbackup', 'type', 'hostname']:
+                               'notifywhenbackup', 'type', 'hostname',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'ping'\n")
@@ -471,7 +480,8 @@ class Pingdom(object):
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname',
-                               'expectedip', 'nameserver']:
+                               'expectedip', 'nameserver',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'dns'\n")
@@ -483,7 +493,8 @@ class Pingdom(object):
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname', 'port',
-                               'stringtosend', 'stringtoexpect']:
+                               'stringtosend', 'stringtoexpect',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'udp'\n")
@@ -495,7 +506,8 @@ class Pingdom(object):
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname', 'port',
-                               'auth', 'stringtoexpect', 'encryption']:
+                               'auth', 'stringtoexpect', 'encryption',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'smtp'\n")
@@ -507,7 +519,8 @@ class Pingdom(object):
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname', 'port',
-                               'stringtoexpect', 'encryption']:
+                               'stringtoexpect', 'encryption',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'pop3'\n")
@@ -519,7 +532,8 @@ class Pingdom(object):
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
                                'notifywhenbackup', 'type', 'hostname', 'port',
-                               'stringtoexpect', 'encryption']:
+                               'stringtoexpect', 'encryption',
+                               'use_legacy_notifications']:
                     sys.stderr.write("'%s'" % key + ' is not a valid ' +
                                      'argument of newCheck() for type ' +
                                      "'imap'\n")

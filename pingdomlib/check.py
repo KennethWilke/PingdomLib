@@ -32,7 +32,9 @@ class PingdomCheck(object):
         * sendnotificationwhendown -- Send notification when down this many
                                        times
         * notifyagainevery -- Notify again every n result
-        * notifywhenbackup -- Notify when back up again"""
+        * notifywhenbackup -- Notify when back up again
+        * use_legacy_notifications -- Use the old notifications instead of BeepManager
+    """
 
     def __init__(self, instantiator, checkinfo=dict()):
         self.pingdom = instantiator
@@ -44,7 +46,8 @@ class PingdomCheck(object):
                     'sendtotwitter', 'sendtoiphone', 'paused',
                     'sendnotificationwhendown', 'notifyagainevery',
                     'notifywhenbackup', 'created', 'type', 'hostname',
-                    'status', 'lasterrortime', 'lasttesttime']:
+                    'status', 'lasterrortime', 'lasttesttime',
+                    'use_legacy_notifications']:
             self.getDetails()
             return getattr(self, attr)
         else:
@@ -60,7 +63,8 @@ class PingdomCheck(object):
                    'lasterrortime', 'lasttesttime', 'url', 'encryption',
                    'port', 'auth', 'shouldcontain', 'shouldnotcontain',
                    'postdata', 'additionalurls', 'stringtosend',
-                   'stringtoexpect', 'expectedip', 'nameserver']:
+                   'stringtoexpect', 'expectedip', 'nameserver',
+                   'use_legacy_notifications']:
             if self.pingdom.pushChanges:
                 self.modify(**{key: value})
             else:
@@ -203,6 +207,9 @@ class PingdomCheck(object):
             * notifywhenbackup -- Notify when back up again
                     Type: Boolean
 
+            * use_legacy_notifications -- Use old notifications instead of BeepManager
+                    Type: Boolean
+
         HTTP check options:
 
             * url -- Target path on server
@@ -333,7 +340,7 @@ class PingdomCheck(object):
                            'encryption', 'port', 'auth', 'shouldcontain',
                            'shouldnotcontain', 'postdata', 'additionalurls',
                            'stringtosend', 'stringtoexpect', 'expectedip',
-                           'nameserver']:
+                           'nameserver', 'use_legacy_notifications']:
                 sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
                                  '<PingdomCheck>.modify()\n')
 
