@@ -1,5 +1,5 @@
 ===============
-PingdomLib v1.2
+PingdomLib v1.3
 ===============
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -84,9 +84,10 @@ Get outages for a specific check
 
 Contributors
 ============
-Wil Clouser
-Ash Berlin
-Wu Jiang
+* Wil Clouser
+* Ash Berlin
+* Wu Jiang
+* Gertjan Oude Lohuis
 
 Special thanks
 ==============
