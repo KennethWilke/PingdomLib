@@ -1,5 +1,5 @@
 ===============
-PingdomLib v1.3
+PingdomLib v1.4
 ===============
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -88,6 +88,7 @@ Contributors
 * Ash Berlin
 * Wu Jiang
 * Gertjan Oude Lohuis
+* Benjamin Boudreau
 
 Special thanks
 ==============

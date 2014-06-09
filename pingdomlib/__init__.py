@@ -1,6 +1,6 @@
 """
 ===============
-PingdomLib v1.3
+PingdomLib v1.4
 ===============
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -61,6 +61,14 @@ for outage in check.outages():
                                           timestamp_start, timestamp_end,
                                           (outage['timeto'] -
                                           outage['timefrom']) / 60)
+
+Contributors
+============
+* Wil Clouser
+* Ash Berlin
+* Wu Jiang
+* Gertjan Oude Lohuis
+* Benjamin Boudreau
 
 Special thanks
 ==============
