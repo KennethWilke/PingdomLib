@@ -114,6 +114,11 @@ class PingdomCheck(object):
         ]
         """
 
+        # 'from' is a reserved word, use from_ instead
+        if parameters.get('from_'):
+            parameters['from'] = parameters.get('from_')
+            del parameters['from_']
+
         # Warn user about unhandled parameters
         for key in parameters:
             if key not in ['limit', 'offset', 'from', 'to']:
@@ -451,6 +456,11 @@ class PingdomCheck(object):
         ]
         """
 
+        # 'from' is a reserved word, use from_ instead
+        if kwargs.get('from_'):
+            kwargs['from'] = kwargs.get('from_')
+            del kwargs['from_']
+
         # Warn user about unhanled parameters
         for key in kwargs:
             if key not in ['from', 'to', 'probes', 'uselocaltime']:
@@ -491,6 +501,11 @@ class PingdomCheck(object):
             ...
         ]
         """
+
+        # 'from' is a reserved word, use from_ instead
+        if kwargs.get('from_'):
+            kwargs['from'] = kwargs.get('from_')
+            del kwargs['from_']
 
         # Warn user about unhanled parameters
         for key in kwargs:
