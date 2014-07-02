@@ -90,7 +90,7 @@ class PingdomCheck(object):
                     Type: Integer
                     Default: 0
 
-            * from -- Return only results with timestamp of first test greater
+            * from_ -- Return only results with timestamp of first test greater
                 or equal to this value. Format is UNIX timestamp.
                     Type: Integer
                     Default: 0
@@ -367,7 +367,7 @@ class PingdomCheck(object):
 
         Optional parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * from_ -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: 0
 
@@ -405,6 +405,11 @@ class PingdomCheck(object):
         }
         """
 
+        # 'from' is a reserved word, use from_ instead
+        if kwargs.get('from_'):
+            kwargs['from'] = kwargs.get('from_')
+            del kwargs['from_']
+
         # Warn user about unhandled parameters
         for key in kwargs:
             if key not in ['from', 'to', 'probes', 'includeuptime',
@@ -424,7 +429,7 @@ class PingdomCheck(object):
 
         Optional parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * from_ -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: One week earlier than 'to'
 
@@ -479,7 +484,7 @@ class PingdomCheck(object):
 
         Optional Parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * from_ -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: One week earlier than 'to'
 
@@ -525,7 +530,7 @@ class PingdomCheck(object):
 
         Optional Parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * from_ -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: 10 intervals earlier than 'to'
 
@@ -574,6 +579,11 @@ class PingdomCheck(object):
         }
         """
 
+        # 'from' is a reserved word, use from_ instead
+        if kwargs.get('from_'):
+            kwargs['from'] = kwargs.get('from_')
+            del kwargs['from_']
+
         # Warn user about unhanled parameters
         for key in kwargs:
             if key not in ['from', 'to', 'resolution', 'includeuptime',
@@ -604,7 +614,7 @@ class PingdomCheck(object):
 
         Optional Parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * from_ -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: 1 day prior to 'to'
 
@@ -667,6 +677,11 @@ class PingdomCheck(object):
             'activeprobes' : <Integer List> Probe identifiers in result set
         }
         """
+
+        # 'from' is a reserved word, use from_ instead
+        if kwargs.get('from_'):
+            kwargs['from'] = kwargs.get('from_')
+            del kwargs['from_']
 
         # Warn user about unhanled parameters
         for key in kwargs:
