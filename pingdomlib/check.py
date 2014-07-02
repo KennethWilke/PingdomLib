@@ -700,7 +700,7 @@ class PingdomCheck(object):
         Returns status message"""
 
         response = self.pingdom.request('PUT', 'reports.public/%s' % self.id)
-        return respose.json()['message']
+        return response.json()['message']
 
     def removePublicReport(self):
         """Deactivate public report for this check.
@@ -709,4 +709,4 @@ class PingdomCheck(object):
 
         response = self.pingdom.request('DELETE',
                                         'reports.public/%s' % self.id)
-        return respose.json()['message']
+        return response.json()['message']
