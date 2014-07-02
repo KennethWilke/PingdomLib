@@ -1245,7 +1245,7 @@ class Pingdom(object):
                 sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
                                  'of newSharedReport()\n')
 
-        parameters = {'checkid': name, 'sharedtype': 'banner'}
+        parameters = {'checkid': checkid, 'sharedtype': 'banner'}
         for key, value in kwargs.iteritems():
             parameters[key] = value
 

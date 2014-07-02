@@ -1,3 +1,6 @@
+import sys
+
+
 class PingdomEmailReport(object):
     """Class represening a pingdom email report
 
