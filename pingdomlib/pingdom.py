@@ -60,16 +60,20 @@ class Pingdom(object):
         else:
             raise Exception("Invalid method in pingdom request")
 
+        # Store pingdom api limits
+        self.shortlimit = response.headers.get(
+            'Req-Limit-Short',
+            self.shortlimit)
+        self.longlimit = response.headers.get(
+            'Req-Limit-Long',
+            self.longlimit)
+
         # Verify OK response
         if response.status_code != 200:
             sys.stderr.write('ERROR from %s: %d' % (response.url,
                                                     response.status_code))
             sys.stderr.write('Returned data: %s\n' % response.json())
             response.raise_for_status()
-
-        # Store pingdom api limits
-        self.shortlimit = response.headers['Req-Limit-Short']
-        self.longlimit = response.headers['Req-Limit-Long']
 
         return response
 
