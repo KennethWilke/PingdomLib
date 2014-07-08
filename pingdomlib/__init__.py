@@ -1,6 +1,6 @@
 """
 ===============
-PingdomLib v1.4
+PingdomLib v1.5
 ===============
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -69,6 +69,7 @@ Contributors
 * Wu Jiang
 * Gertjan Oude Lohuis
 * Benjamin Boudreau
+* Britt Gresham
 
 Special thanks
 ==============
