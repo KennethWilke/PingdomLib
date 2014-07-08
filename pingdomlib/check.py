@@ -75,7 +75,7 @@ class PingdomCheck(object):
         return "<PingdomCheck (%s)%s is '%s'>" % (self.id, self.name,
                                                   self.status)
 
-    def getAnalyses(self, **parameters):
+    def getAnalyses(self, **kwargs):
         """Returns a list of the latest root cause analysis results for a
             specified check.
 
@@ -90,12 +90,12 @@ class PingdomCheck(object):
                     Type: Integer
                     Default: 0
 
-            * from -- Return only results with timestamp of first test greater
+            * time_from -- Return only results with timestamp of first test greater
                 or equal to this value. Format is UNIX timestamp.
                     Type: Integer
                     Default: 0
 
-            * to -- Return only results with timestamp of first test less or
+            * time_to -- Return only results with timestamp of first test less or
                 equal to this value. Format is UNIX timestamp.
                     Type: Integer
                     Default: Current Time
@@ -114,14 +114,22 @@ class PingdomCheck(object):
         ]
         """
 
-        # Warn user about unhandled parameters
-        for key in parameters:
+        # 'from' is a reserved word, use time_from instead
+        if kwargs.get('time_from'):
+            kwargs['from'] = kwargs.get('time_from')
+            del kwargs['time_from']
+        if kwargs.get('time_to'):
+            kwargs['to'] = kwargs.get('time_to')
+            del kwargs['time_to']
+
+        # Warn user about unhandled kwargs
+        for key in kwargs:
             if key not in ['limit', 'offset', 'from', 'to']:
                 sys.stderr.write('%s not a valid argument for analysis()\n'
                                  % key)
 
         response = self.pingdom.request('GET', 'analysis/%s' % self.id,
-                                        parameters)
+                                        kwargs)
 
         return [PingdomAnalysis(self, x) for x in response.json()['analysis']]
 
@@ -362,11 +370,11 @@ class PingdomCheck(object):
 
         Optional parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * time_from -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: 0
 
-            * to -- End time of period. Format is UNIX timestamp
+            * time_to -- End time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: Current time
 
@@ -400,6 +408,14 @@ class PingdomCheck(object):
         }
         """
 
+        # 'from' is a reserved word, use time_from instead
+        if kwargs.get('time_from'):
+            kwargs['from'] = kwargs.get('time_from')
+            del kwargs['time_from']
+        if kwargs.get('time_to'):
+            kwargs['to'] = kwargs.get('time_to')
+            del kwargs['time_to']
+
         # Warn user about unhandled parameters
         for key in kwargs:
             if key not in ['from', 'to', 'probes', 'includeuptime',
@@ -419,11 +435,11 @@ class PingdomCheck(object):
 
         Optional parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * time_from -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: One week earlier than 'to'
 
-            * to -- End time of period. Format is UNIX timestamp
+            * time_to -- End time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: Current time
 
@@ -451,6 +467,14 @@ class PingdomCheck(object):
         ]
         """
 
+        # 'from' is a reserved word, use time_from instead
+        if kwargs.get('time_from'):
+            kwargs['from'] = kwargs.get('time_from')
+            del kwargs['time_from']
+        if kwargs.get('time_to'):
+            kwargs['to'] = kwargs.get('time_to')
+            del kwargs['time_to']
+
         # Warn user about unhanled parameters
         for key in kwargs:
             if key not in ['from', 'to', 'probes', 'uselocaltime']:
@@ -469,11 +493,11 @@ class PingdomCheck(object):
 
         Optional Parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * time_from -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: One week earlier than 'to'
 
-            * to -- End time of period. Format is UNIX timestamp
+            * time_to -- End time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: Current time
 
@@ -491,6 +515,14 @@ class PingdomCheck(object):
             ...
         ]
         """
+
+        # 'from' is a reserved word, use time_from instead
+        if kwargs.get('time_from'):
+            kwargs['from'] = kwargs.get('time_from')
+            del kwargs['time_from']
+        if kwargs.get('time_to'):
+            kwargs['to'] = kwargs.get('time_to')
+            del kwargs['time_to']
 
         # Warn user about unhanled parameters
         for key in kwargs:
@@ -510,11 +542,11 @@ class PingdomCheck(object):
 
         Optional Parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * time_from -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: 10 intervals earlier than 'to'
 
-            * to -- End time of period. Format is UNIX timestamp
+            * time_to -- End time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: Current time
 
@@ -559,6 +591,14 @@ class PingdomCheck(object):
         }
         """
 
+        # 'from' is a reserved word, use time_from instead
+        if kwargs.get('time_from'):
+            kwargs['from'] = kwargs.get('time_from')
+            del kwargs['time_from']
+        if kwargs.get('time_to'):
+            kwargs['to'] = kwargs.get('time_to')
+            del kwargs['time_to']
+
         # Warn user about unhanled parameters
         for key in kwargs:
             if key not in ['from', 'to', 'resolution', 'includeuptime',
@@ -589,11 +629,11 @@ class PingdomCheck(object):
 
         Optional Parameters:
 
-            * from -- Start time of period. Format is UNIX timestamp
+            * time_from -- Start time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: 1 day prior to 'to'
 
-            * to -- End time of period. Format is UNIX timestamp
+            * time_to -- End time of period. Format is UNIX timestamp
                     Type: Integer
                     Default: Current time
 
@@ -653,6 +693,14 @@ class PingdomCheck(object):
         }
         """
 
+        # 'from' is a reserved word, use time_from instead
+        if kwargs.get('time_from'):
+            kwargs['from'] = kwargs.get('time_from')
+            del kwargs['time_from']
+        if kwargs.get('time_to'):
+            kwargs['to'] = kwargs.get('time_to')
+            del kwargs['time_to']
+
         # Warn user about unhanled parameters
         for key in kwargs:
             if key not in ['from', 'to', 'probes', 'status', 'limit', 'offset',
@@ -670,7 +718,7 @@ class PingdomCheck(object):
         Returns status message"""
 
         response = self.pingdom.request('PUT', 'reports.public/%s' % self.id)
-        return respose.json()['message']
+        return response.json()['message']
 
     def removePublicReport(self):
         """Deactivate public report for this check.
@@ -679,4 +727,4 @@ class PingdomCheck(object):
 
         response = self.pingdom.request('DELETE',
                                         'reports.public/%s' % self.id)
-        return respose.json()['message']
+        return response.json()['message']

@@ -1,3 +1,6 @@
+import sys
+
+
 class PingdomContact(object):
     """Class representing a pingdom contact
 
