@@ -352,6 +352,12 @@ class PingdomCheck(object):
                 sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
                                  '<PingdomCheck>.modify()\n')
 
+        # Pingdom only accepts the literal string "true" as valid true argument.
+        # However, requests will turn a literal True into 1 when building requests
+        # params. That is confusing to users, so fix it here.
+        if kwargs.get("use_legacy_notifications"):
+            kwargs["use_legacy_notifications"] = "true"
+
         response = self.pingdom.request("PUT", 'checks/%s' % self.id, kwargs)
 
         return response.json()['message']
