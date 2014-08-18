@@ -1,3 +1,4 @@
+v1.7, August 18th, 2014 -- Fix to pass use_legacy_notifications boolean as string
 v1.6, July 29th, 2014 -- Fix to send check modifications in body instead of query params
 v1.5, July 8th, 2014 -- Removed from as a keyword argument in various calls, no longer assume limits in pingdom response headers
 v1.4, June 9th, 2014 -- 'host' parameter added to checks where it should have been supported
