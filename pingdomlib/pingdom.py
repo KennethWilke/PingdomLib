@@ -46,11 +46,11 @@ class Pingdom(object):
                                     auth=(self.username, self.password),
                                     headers=headers)
         elif method.upper() == 'POST':
-            response = requests.post(self.url + url, params=parameters,
+            response = requests.post(self.url + url, data=parameters,
                                      auth=(self.username, self.password),
                                      headers=headers)
         elif method.upper() == 'PUT':
-            response = requests.put(self.url + url, params=parameters,
+            response = requests.put(self.url + url, data=parameters,
                                     auth=(self.username, self.password),
                                     headers=headers)
         elif method.upper() == 'DELETE':
