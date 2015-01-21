@@ -5,6 +5,11 @@ from pingdomlib.analysis import PingdomAnalysis
 checktypes = ['http', 'httpcustom', 'tcp', 'ping', 'dns', 'udp', 'smtp',
               'pop3', 'imap']
 
+legacy_notification_parameters = ['notifyagainevery', 'notifywhenbackup',
+                                  'sendnotificationwhendown', 'sendtoandroid',
+                                  'sendtoemail', 'sendtoiphone', 'sendtosms',
+                                  'sendtotwitter']
+
 
 class PingdomCheck(object):
     """Class representing a check in pingdom
@@ -355,7 +360,14 @@ class PingdomCheck(object):
         # Pingdom only accepts the literal string "true" as valid true argument.
         # However, requests will turn a literal True into 1 when building requests
         # params. That is confusing to users, so fix it here.
-        if kwargs.get("use_legacy_notifications"):
+        if kwargs.get("use_legacy_notifications") in (True, 1):
+            kwargs["use_legacy_notifications"] = "true"
+
+        # If one of the legacy parameters is used, it is required to set the legacy flag.
+        # https://github.com/KennethWilke/PingdomLib/issues/12
+        if any([k for k in kwargs if k in legacy_notification_parameters]):
+            if "use_legacy_notifications" in kwargs and kwargs["use_legacy_notifications"] != "true":
+                raise Exception("Cannot set legacy parameter when use_legacy_notifications is not 'true'")
             kwargs["use_legacy_notifications"] = "true"
 
         response = self.pingdom.request("PUT", 'checks/%s' % self.id, kwargs)

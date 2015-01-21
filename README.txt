@@ -1,5 +1,5 @@
 ===============
-PingdomLib v1.7
+PingdomLib v1.8
 ===============
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -12,7 +12,7 @@ Usage examples
 Connecting to pingdom
 ---------------------
 
-::
+.. code-block:: python
 
     import pingdomlib
     api = pingdomlib.Pingdom(username, password, apikey)
@@ -20,7 +20,7 @@ Connecting to pingdom
 Show all checks that are not in 'UP' status
 -------------------------------------------
 
-::
+.. code-block:: python
 
     # See pingdomlib.pingdom documentation to see available calls and settings
     pingdomchecks = api.getChecks()
@@ -32,14 +32,14 @@ Show all checks that are not in 'UP' status
 Creating a new check
 --------------------
 
-::
+.. code-block:: python
 
     newcheck = api.newCheck("New check name", "www.hostnametocheck.com")
 
 Updating a check
 ----------------
 
-::
+.. code-block:: python
 
     # Updates to check objects are pushed immediately to pingdom
     newcheck.paused = True
@@ -47,14 +47,14 @@ Updating a check
 Disabling change pushing for checks
 -----------------------------------
 
-::
+.. code-block:: python
 
     api.pushChanges = False
 
 Get last 10 pingdom alerts sent
 -------------------------------
 
-::
+.. code-block:: python
 
     import datetime
     for alert in api.alerts(limit=10):
@@ -66,7 +66,7 @@ Get last 10 pingdom alerts sent
 Get outages for a specific check
 --------------------------------
 
-::
+.. code-block:: python
 
     import datetime
     check = api.getCheck(227878)
@@ -91,6 +91,7 @@ Contributors
 * Benjamin Boudreau
 * Britt Gresham
 * Allard Hoeve
+* Willem de Groot
 
 Special thanks
 ==============
