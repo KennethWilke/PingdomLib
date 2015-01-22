@@ -36,6 +36,15 @@ class Pingdom(object):
     @staticmethod
     def _serializeBooleans(params):
         """"Convert all booleans to lowercase strings"""
+        serialized = {}
+        for name, value in params.iteritems():
+            if value is True:
+                value = 'true'
+            elif value is False:
+                value = 'false'
+            serialized[name] = value
+        return serialized
+
         for k, v in params.iteritems():
             if isinstance(v, bool):
                 params[k] = str(v).lower()
@@ -44,7 +53,7 @@ class Pingdom(object):
         """Requests wrapper function"""
 
         # The requests library uses urllib, which serializes to "True"/"False" while Pingdom requires lowercase
-        self._serializeBooleans(parameters)
+        parameters = self._serializeBooleans(parameters)
 
         headers = {'App-Key': self.apikey}
         if self.accountemail:
