@@ -42,11 +42,11 @@ class PingdomCheck(object):
     """
 
     _detail_keys = ['name', 'resolution', 'sendtoemail', 'sendtosms',
-                    'sendtotwitter', 'sendtoiphone', 'paused',
+                    'sendtotwitter', 'sendtoiphone', 'paused', 'contactids',
                     'sendnotificationwhendown', 'notifyagainevery',
                     'notifywhenbackup', 'created', 'type', 'hostname',
                     'status', 'lasterrortime', 'lasttesttime',
-                    'use_legacy_notifications']
+                    'use_legacy_notifications',]
 
     def __init__(self, instantiator, checkinfo=dict()):
         self.pingdom = instantiator
