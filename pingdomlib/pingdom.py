@@ -445,7 +445,7 @@ class Pingdom(object):
         if checktype == 'http':
             # Warn user about unhandled parameters
             for key in kwargs:
-                if key not in ['paused', 'resolution', 'contactids',
+                if key not in ['alert_policy', 'autoresolve', 'paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
@@ -473,7 +473,7 @@ class Pingdom(object):
         elif checktype == 'tcp':
             # Warn user about unhandled parameters
             for key in kwargs:
-                if key not in ['paused', 'resolution', 'contactids',
+                if key not in ['alert_policy', 'autoresolve', 'paused', 'resolution', 'contactids',
                                'sendtoemail', 'sendtosms', 'sendtotwitter',
                                'sendtoiphone', 'sendtoandroid',
                                'sendnotificationwhendown', 'notifyagainevery',
