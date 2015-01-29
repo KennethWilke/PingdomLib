@@ -41,18 +41,20 @@ class PingdomCheck(object):
         * use_legacy_notifications -- Use the old notifications instead of BeepManager
     """
 
+    _detail_keys = ['name', 'resolution', 'sendtoemail', 'sendtosms',
+                    'sendtotwitter', 'sendtoiphone', 'paused', 'contactids',
+                    'sendnotificationwhendown', 'notifyagainevery',
+                    'notifywhenbackup', 'created', 'type', 'hostname',
+                    'status', 'lasterrortime', 'lasttesttime',
+                    'use_legacy_notifications',]
+
     def __init__(self, instantiator, checkinfo=dict()):
         self.pingdom = instantiator
         self.__addDetails__(checkinfo)
 
     def __getattr__(self, attr):
         # Pull variables from pingdom if unset
-        if attr in ['name', 'resolution', 'sendtoemail', 'sendtosms',
-                    'sendtotwitter', 'sendtoiphone', 'paused',
-                    'sendnotificationwhendown', 'notifyagainevery',
-                    'notifywhenbackup', 'created', 'type', 'hostname',
-                    'status', 'lasterrortime', 'lasttesttime',
-                    'use_legacy_notifications']:
+        if attr in self._detail_keys:
             self.getDetails()
             return getattr(self, attr)
         else:
@@ -157,6 +159,11 @@ class PingdomCheck(object):
             else:
                 # Store other key value pairs as attributes
                 object.__setattr__(self, key, checkinfo[key])
+
+        # back-fill missing keys (if any)
+        missing_keys = list(set(self._detail_keys) - set(checkinfo.keys()))
+        for key in missing_keys:
+            object.__setattr__(self, key, None)
 
         if 'status' in checkinfo and checkinfo['status'] == 'paused':
             object.__setattr__(self, 'paused', True)
