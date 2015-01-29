@@ -1,5 +1,5 @@
 ===============
-PingdomLib v1.8
+PingdomLib v1.9
 ===============
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -92,6 +92,8 @@ Contributors
 * Britt Gresham
 * Allard Hoeve
 * Willem de Groot
+* Aaron Fay
+* Rick van de Loo
 
 Special thanks
 ==============
