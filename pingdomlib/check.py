@@ -71,7 +71,8 @@ class PingdomCheck(object):
                    'port', 'auth', 'shouldcontain', 'shouldnotcontain',
                    'postdata', 'additionalurls', 'stringtosend',
                    'stringtoexpect', 'expectedip', 'nameserver',
-                   'use_legacy_notifications', 'host']:
+                   'use_legacy_notifications', 'host', 'alert_policy',
+                   'autoresolve']:
             if self.pingdom.pushChanges:
                 self.modify(**{key: value})
             else:
@@ -360,7 +361,8 @@ class PingdomCheck(object):
                            'encryption', 'port', 'auth', 'shouldcontain',
                            'shouldnotcontain', 'postdata', 'additionalurls',
                            'stringtosend', 'stringtoexpect', 'expectedip',
-                           'nameserver', 'use_legacy_notifications', 'host']:
+                           'nameserver', 'use_legacy_notifications', 'host',
+                           'alert_policy', 'autoresolve']:
                 sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
                                  '<PingdomCheck>.modify()\n')
 
