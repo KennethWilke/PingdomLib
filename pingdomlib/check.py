@@ -71,7 +71,8 @@ class PingdomCheck(object):
                    'port', 'auth', 'shouldcontain', 'shouldnotcontain',
                    'postdata', 'additionalurls', 'stringtosend',
                    'stringtoexpect', 'expectedip', 'nameserver',
-                   'use_legacy_notifications', 'host']:
+                   'use_legacy_notifications', 'host', 'alert_policy',
+                   'autoresolve']:
             if self.pingdom.pushChanges:
                 self.modify(**{key: value})
             else:
@@ -360,22 +361,17 @@ class PingdomCheck(object):
                            'encryption', 'port', 'auth', 'shouldcontain',
                            'shouldnotcontain', 'postdata', 'additionalurls',
                            'stringtosend', 'stringtoexpect', 'expectedip',
-                           'nameserver', 'use_legacy_notifications', 'host']:
+                           'nameserver', 'use_legacy_notifications', 'host',
+                           'alert_policy', 'autoresolve']:
                 sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
                                  '<PingdomCheck>.modify()\n')
-
-        # Pingdom only accepts the literal string "true" as valid true argument.
-        # However, requests will turn a literal True into 1 when building requests
-        # params. That is confusing to users, so fix it here.
-        if kwargs.get("use_legacy_notifications") in (True, 1):
-            kwargs["use_legacy_notifications"] = "true"
 
         # If one of the legacy parameters is used, it is required to set the legacy flag.
         # https://github.com/KennethWilke/PingdomLib/issues/12
         if any([k for k in kwargs if k in legacy_notification_parameters]):
-            if "use_legacy_notifications" in kwargs and kwargs["use_legacy_notifications"] != "true":
-                raise Exception("Cannot set legacy parameter when use_legacy_notifications is not 'true'")
-            kwargs["use_legacy_notifications"] = "true"
+            if "use_legacy_notifications" in kwargs and kwargs["use_legacy_notifications"] != True:
+                raise Exception("Cannot set legacy parameter when use_legacy_notifications is not True")
+            kwargs["use_legacy_notifications"] = True
 
         response = self.pingdom.request("PUT", 'checks/%s' % self.id, kwargs)
 
