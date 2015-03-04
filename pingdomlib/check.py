@@ -46,7 +46,7 @@ class PingdomCheck(object):
                     'sendnotificationwhendown', 'notifyagainevery',
                     'notifywhenbackup', 'created', 'type', 'hostname',
                     'status', 'lasterrortime', 'lasttesttime',
-                    'use_legacy_notifications',]
+                    'use_legacy_notifications', 'lastresponsetime',]
 
     def __init__(self, instantiator, checkinfo=dict()):
         self.pingdom = instantiator
