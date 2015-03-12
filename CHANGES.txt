@@ -1,3 +1,4 @@
+v2.0.0, March 12th, 2015 -- Another missing legacy attribute added, switching to semvar for versioning
 v1.9, January 29th, 2014 -- Missing attributes now filled with None by default, bool serialization fixed, alert_policy implementations
 v1.8, December 30th, 2014 -- Fix to throw exception if legacy parameter is used without legacy flag
 v1.7, August 18th, 2014 -- Fix to pass use_legacy_notifications boolean as string

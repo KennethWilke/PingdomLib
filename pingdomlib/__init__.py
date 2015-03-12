@@ -1,7 +1,7 @@
 """
-===============
-PingdomLib v1.9
-===============
+=================
+PingdomLib v2.0.0
+=================
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
 This is a python library to provide full access to the pingdom API, along with

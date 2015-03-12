@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='PingdomLib',
-    version='1.9',
+    version='2.0.0',
     author='Kenneth Wilke',
     author_email='kenneth.wilke@rackspace.com',
     packages=['pingdomlib'],
