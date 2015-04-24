@@ -88,7 +88,7 @@ class PingdomContact(object):
                 sys.stderr.write("'%s'" % key + ' is not a valid argument ' +
                                  'of <PingdomContact>.modify()\n')
 
-        response = self.pingdom.request('PUT', 'contacts/%s' % self.id, kwargs)
+        response = self.pingdom.request('PUT', 'notification_contacts/%s' % self.id, kwargs)
 
         return response.json()['message']
 
@@ -97,5 +97,5 @@ class PingdomContact(object):
 
         Returns status message"""
 
-        response = self.pingdom.request('DELETE', 'contacts/%s' % self.id)
+        response = self.pingdom.request('DELETE', 'notification_contacts/%s' % self.id)
         return response.json()['message']

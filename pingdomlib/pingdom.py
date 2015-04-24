@@ -780,7 +780,7 @@ class Pingdom(object):
                                  'of getContacts()\n')
 
         return [PingdomContact(self, x) for x in
-                self.request("GET", "contacts", kwargs).json()['contacts']]
+                self.request("GET", "notification_contacts", kwargs).json()['contacts']]
 
     def newContact(self, name, **kwargs):
         """Create a new contact.
@@ -828,7 +828,7 @@ class Pingdom(object):
                                  'of newContact()\n')
 
         kwargs['name'] = name
-        contactinfo = self.request("POST", "contacts",
+        contactinfo = self.request("POST", "notification_contacts",
                                    kwargs).json()['contact']
 
         return PingdomContact(self, contactinfo)
@@ -841,7 +841,7 @@ class Pingdom(object):
         Returns status message
         """
 
-        response = self.request("PUT", "contacts", {'contactids': contactids,
+        response = self.request("PUT", "notification_contacts", {'contactids': contactids,
                                                     'paused': paused})
         return response.json()['message']
 
@@ -853,7 +853,7 @@ class Pingdom(object):
         Returns status message
         """
 
-        return self.request("DELETE", "contacts",
+        return self.request("DELETE", "notification_contacts",
                             {'delcheckids': contactids}).json()['message']
 
     def singleTest(self, host, checktype, **kwargs):
