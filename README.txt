@@ -1,5 +1,5 @@
 =================
-PingdomLib v2.0.1
+PingdomLib v2.0.2
 =================
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
