@@ -220,6 +220,11 @@ class Pingdom(object):
         check.getDetails()
         return check
 
+    def getResults(self, checkid):
+        """ Returns detailed results for a specified check id."""
+        response = self.request('GET','results/%s' % checkid)
+        return response.json()
+
     def newCheck(self, name, host, checktype='http', **kwargs):
         """Creates a new check with settings specified by provided parameters.
 
