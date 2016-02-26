@@ -1,3 +1,4 @@
+v2.0.3, February 25th, 2016 -- Call added to handle /results/{checkid} routes
 v2.0.2, July 10th, 2015 -- Removed wsgiref dependency to ease installation on Python 3.x
 v2.0.1, April 27th, 2015 -- 'contacts' endpoint changed to 'notification_contacts'
 v2.0.0, March 12th, 2015 -- Another missing legacy attribute added, switching to semvar for versioning

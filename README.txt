@@ -1,5 +1,5 @@
 =================
-PingdomLib v2.0.2
+PingdomLib v2.0.3
 =================
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
@@ -95,6 +95,7 @@ Contributors
 * Aaron Fay
 * Rick van de Loo
 * Oleksandr Kushchenko
+* Steven Bailey
 
 Special thanks
 ==============
