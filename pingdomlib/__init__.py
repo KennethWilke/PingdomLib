@@ -1,7 +1,7 @@
 """
-===============
-PingdomLib v1.8
-===============
+=================
+PingdomLib v2.0.3
+=================
 Written by: Kenneth Wilke <kenneth.wilke@gmail.com>
 
 This is a python library to provide full access to the pingdom API, along with
@@ -72,6 +72,9 @@ Contributors
 * Britt Gresham
 * Allard Hoeve
 * Willem de Groot
+* Aaron Fay
+* Rick van de Loo
+* Oleksandr Kushchenko
 
 Special thanks
 ==============

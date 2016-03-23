@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='PingdomLib',
-    version='1.8',
+    version='2.0.3',
     author='Kenneth Wilke',
     author_email='kenneth.wilke@rackspace.com',
     packages=['pingdomlib'],
@@ -17,7 +17,6 @@ setup(
     description='A documented python library to consume the full pingdom API',
     long_description=open('README.txt').read(),
     install_requires=[
-        "requests >= 2.2.1",
-        "wsgiref >= 0.1.2",
+        "requests >= 2.2.1"
     ],
 )

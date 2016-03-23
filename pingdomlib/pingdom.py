@@ -33,8 +33,27 @@ class Pingdom(object):
         self.shortlimit = ''
         self.longlimit = ''
 
+    @staticmethod
+    def _serializeBooleans(params):
+        """"Convert all booleans to lowercase strings"""
+        serialized = {}
+        for name, value in params.iteritems():
+            if value is True:
+                value = 'true'
+            elif value is False:
+                value = 'false'
+            serialized[name] = value
+        return serialized
+
+        for k, v in params.iteritems():
+            if isinstance(v, bool):
+                params[k] = str(v).lower()
+
     def request(self, method, url, parameters=dict()):
         """Requests wrapper function"""
+
+        # The requests library uses urllib, which serializes to "True"/"False" while Pingdom requires lowercase
+        parameters = self._serializeBooleans(parameters)
 
         headers = {'App-Key': self.apikey}
         if self.accountemail:
@@ -200,6 +219,11 @@ class Pingdom(object):
         check = PingdomCheck(self, {'id': checkid})
         check.getDetails()
         return check
+
+    def getResults(self, checkid):
+        """ Returns detailed results for a specified check id."""
+        response = self.request('GET','results/%s' % checkid)
+        return response.json()
 
     def newCheck(self, name, host, checktype='http', **kwargs):
         """Creates a new check with settings specified by provided parameters.
@@ -761,7 +785,7 @@ class Pingdom(object):
                                  'of getContacts()\n')
 
         return [PingdomContact(self, x) for x in
-                self.request("GET", "contacts", kwargs).json()['contacts']]
+                self.request("GET", "notification_contacts", kwargs).json()['contacts']]
 
     def newContact(self, name, **kwargs):
         """Create a new contact.
@@ -809,7 +833,7 @@ class Pingdom(object):
                                  'of newContact()\n')
 
         kwargs['name'] = name
-        contactinfo = self.request("POST", "contacts",
+        contactinfo = self.request("POST", "notification_contacts",
                                    kwargs).json()['contact']
 
         return PingdomContact(self, contactinfo)
@@ -822,7 +846,7 @@ class Pingdom(object):
         Returns status message
         """
 
-        response = self.request("PUT", "contacts", {'contactids': contactids,
+        response = self.request("PUT", "notification_contacts", {'contactids': contactids,
                                                     'paused': paused})
         return response.json()['message']
 
@@ -834,7 +858,7 @@ class Pingdom(object):
         Returns status message
         """
 
-        return self.request("DELETE", "contacts",
+        return self.request("DELETE", "notification_contacts",
                             {'delcheckids': contactids}).json()['message']
 
     def singleTest(self, host, checktype, **kwargs):
