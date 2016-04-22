@@ -9,3 +9,4 @@ include
 lib
 lib64
 test.py
+PingdomLib.egg-info
