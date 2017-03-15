@@ -201,11 +201,16 @@ class Pingdom(object):
             * offset -- Offset for listing (requires limit.)
                     Type: Integer
                     Default: 0
+
+            * tags -- Filter listing by tag/s
+                    Type: String
+                    Default: None
+
         """
 
         # Warn user about unhandled parameters
         for key in parameters:
-            if key not in ['limit', 'offset']:
+            if key not in ['limit', 'offset', 'tags']:
                 sys.stderr.write('%s not a valid argument for getChecks()\n'
                                  % key)
 
