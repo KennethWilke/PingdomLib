@@ -39,6 +39,7 @@ class PingdomCheck(object):
         * notifyagainevery -- Notify again every n result
         * notifywhenbackup -- Notify when back up again
         * use_legacy_notifications -- Use the old notifications instead of BeepManager
+        * probe_filters -- What region should the probe check from
     """
 
     _detail_keys = ['name', 'resolution', 'sendtoemail', 'sendtosms',
@@ -46,7 +47,7 @@ class PingdomCheck(object):
                     'sendnotificationwhendown', 'notifyagainevery',
                     'notifywhenbackup', 'created', 'type', 'hostname',
                     'status', 'lasterrortime', 'lasttesttime',
-                    'use_legacy_notifications', 'lastresponsetime',]
+                    'use_legacy_notifications', 'lastresponsetime', 'probe_filters',]
 
     def __init__(self, instantiator, checkinfo=dict()):
         self.pingdom = instantiator
@@ -72,7 +73,7 @@ class PingdomCheck(object):
                    'postdata', 'additionalurls', 'stringtosend',
                    'stringtoexpect', 'expectedip', 'nameserver',
                    'use_legacy_notifications', 'host', 'alert_policy',
-                   'autoresolve']:
+                   'autoresolve', 'probe_filters']:
             if self.pingdom.pushChanges:
                 self.modify(**{key: value})
             else:
@@ -231,6 +232,9 @@ class PingdomCheck(object):
             * use_legacy_notifications -- Use old notifications instead of BeepManager
                     Type: Boolean
 
+            * probe_filters -- Can be one of region: NA, region: EU, region: APAC
+                    Type: String
+
         HTTP check options:
 
             * url -- Target path on server
@@ -362,7 +366,7 @@ class PingdomCheck(object):
                            'shouldnotcontain', 'postdata', 'additionalurls',
                            'stringtosend', 'stringtoexpect', 'expectedip',
                            'nameserver', 'use_legacy_notifications', 'host',
-                           'alert_policy', 'autoresolve']:
+                           'alert_policy', 'autoresolve', 'probe_filters']:
                 sys.stderr.write("'%s'" % key + ' is not a valid argument of' +
                                  '<PingdomCheck>.modify()\n')
 
